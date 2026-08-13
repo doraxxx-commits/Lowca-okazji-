@@ -3,79 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Claimer & Łowca Gier</title>
+    <title>Game Claimer & Okazje</title>
     <style>
         :root {
             --bg: #0d1117;
             --card-bg: #161b22;
             --accent: #00ff88;
-            --steam: #171a21;
-            --epic: #2a2a2a;
             --text: #f0f6fc;
             --text-muted: #8b949e;
+            --red: #ff4757;
         }
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 16px; }
         
-        .header { max-width: 1100px; margin: 0 auto 30px auto; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 20px; }
-        .header h1 { margin: 0; color: var(--accent); font-size: 24px; }
+        .header { max-width: 1000px; margin: 0 auto 20px auto; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 15px; }
+        .header h1 { margin: 0; color: var(--accent); font-size: 20px; }
         
-        /* Sekcja Kont */
-        .accounts-panel { max-width: 1100px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-        .accounts-panel h2 { font-size: 16px; margin-top: 0; color: var(--text-muted); text-transform: uppercase; }
-        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .accounts-panel { max-width: 1000px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+        .accounts-panel h2 { font-size: 14px; margin-top: 0; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; }
         
-        .account-card { background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; display: flex; align-items: center; justify-content: space-between; }
-        .btn-connect { background: #238636; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; }
-        .btn-connected { background: #1f6feb; }
+        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .account-card { background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; display: flex; flex-direction: column; gap: 8px; }
+        .account-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; }
+        
+        input[type="text"] { width: 100%; padding: 8px; background: #161b22; border: 1px solid #30363d; border-radius: 6px; color: white; font-size: 12px; box-sizing: border-box; }
+        
+        .btn { display: inline-block; text-align: center; background: #238636; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; width: 100%; box-sizing: border-box; }
+        .btn-disconnect { background: #21262d; color: var(--red); border: 1px solid var(--red); }
 
-        /* Sekcja Gier */
-        .container { max-width: 1100px; margin: 0 auto; }
-        .section-title { font-size: 20px; color: var(--accent); margin: 30px 0 15px 0; display: flex; align-items: center; gap: 8px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .section-title { font-size: 18px; color: var(--accent); margin: 30px 0 15px 0; font-weight: bold; }
         
-        .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+        .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
         .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #30363d; display: flex; flex-direction: column; position: relative; }
-        .card-img { width: 100%; height: 130px; object-fit: cover; }
-        .badge-free { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .card-img { width: 100%; height: 120px; object-fit: cover; background: #000; }
+        .badge-free { position: absolute; top: 8px; right: 8px; background: var(--accent); color: #000; font-weight: bold; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
+        
         .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 14px; font-weight: bold; margin: 0 0 6px 0; }
-        .card-price { font-size: 18px; font-weight: bold; color: var(--accent); margin-bottom: 8px; }
-        .btn-claim { background: var(--accent); color: black; border: none; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; text-decoration: none; font-size: 13px; margin-top: auto; }
+        .card-title { font-size: 13px; font-weight: bold; margin: 0 0 6px 0; line-height: 1.3; }
+        .card-store { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+        .card-price { font-size: 16px; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
+        
+        .btn-claim { background: var(--accent); color: black; border: none; padding: 8px; border-radius: 6px; font-weight: bold; text-align: center; text-decoration: none; font-size: 12px; margin-top: auto; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>🎮 Game Claimer & Okazje</h1>
-        <div>Status Auto-Bota: <span style="color:var(--accent); font-weight:bold;">AKTYWNY 🟢</span></div>
+        <div style="font-size:12px;">Auto-Bot: <span style="color:var(--accent); font-weight:bold;">AKTYWNY 🟢</span></div>
     </div>
 
-    <!-- Panel Połączonych Kont -->
+    <!-- PANEL POLĄCZONYCH KONT -->
     <div class="accounts-panel">
-        <h2>Twoje Połączone Konta (Auto-Przypisywanie)</h2>
+        <h2>Połączone Konta (Auto-Przypisywanie)</h2>
         <div class="accounts-grid">
+            
+            <!-- STEAM -->
             <div class="account-card">
-                <span>Steam</span>
-                <a href="/login/steam" class="btn-connect">Połącz</a>
+                <div class="account-header">
+                    <span>Steam</span>
+                    {% if connected.steam %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
+                </div>
+                {% if connected.steam %}
+                    <div style="font-size:11px; color:var(--text-muted);">ID: {{ connected.steam }}</div>
+                    <a href="/disconnect/steam" class="btn btn-disconnect">Odłącz Konto</a>
+                {% else %}
+                    <a href="/login/steam" class="btn">Zaloguj przez Steam ↗</a>
+                {% endif %}
             </div>
+
+            <!-- EPIC GAMES -->
             <div class="account-card">
-                <span>Epic Games</span>
-                <a href="/login/epic" class="btn-connect">Połącz</a>
+                <div class="account-header">
+                    <span>Epic Games</span>
+                    {% if connected.epic %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
+                </div>
+                {% if connected.epic %}
+                    <div style="font-size:11px; color:var(--text-muted);">Użytkownik: {{ connected.epic }}</div>
+                    <a href="/disconnect/epic" class="btn btn-disconnect">Odłącz Konto</a>
+                {% else %}
+                    <form action="/connect/epic" method="POST">
+                        <input type="text" name="username" placeholder="Nick / Email Epic" required style="margin-bottom:6px;">
+                        <button type="submit" class="btn">Zapisz Konto</button>
+                    </form>
+                {% endif %}
             </div>
+
+            <!-- XBOX -->
             <div class="account-card">
-                <span>Xbox</span>
-                <a href="#" class="btn-connect">Połącz</a>
+                <div class="account-header">
+                    <span>Xbox</span>
+                    {% if connected.xbox %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
+                </div>
+                {% if connected.xbox %}
+                    <div style="font-size:11px; color:var(--text-muted);">Gamertag: {{ connected.xbox }}</div>
+                    <a href="/disconnect/xbox" class="btn btn-disconnect">Odłącz Konto</a>
+                {% else %}
+                    <form action="/connect/xbox" method="POST">
+                        <input type="text" name="username" placeholder="Xbox Gamertag" required style="margin-bottom:6px;">
+                        <button type="submit" class="btn">Zapisz Konto</button>
+                    </form>
+                {% endif %}
             </div>
+
+            <!-- PLAYSTATION -->
             <div class="account-card">
-                <span>PlayStation</span>
-                <a href="#" class="btn-connect">Połącz</a>
+                <div class="account-header">
+                    <span>PlayStation</span>
+                    {% if connected.psn %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
+                </div>
+                {% if connected.psn %}
+                    <div style="font-size:11px; color:var(--text-muted);">PSN Online ID: {{ connected.psn }}</div>
+                    <a href="/disconnect/psn" class="btn btn-disconnect">Odłącz Konto</a>
+                {% else %}
+                    <form action="/connect/psn" method="POST">
+                        <input type="text" name="username" placeholder="PSN ID" required style="margin-bottom:6px;">
+                        <button type="submit" class="btn">Zapisz Konto</button>
+                    </form>
+                {% endif %}
             </div>
+
         </div>
     </div>
 
     <div class="container">
-        <!-- Sekcja Darmowe Gry -->
-        <div class="section-title">🎁 Aktualne Darmowe Gry do Odebrania (100% OFF)</div>
+        
+        <!-- SEKCJA DARMOWE GRY -->
+        <div class="section-title">🎁 Aktualne Darmowe Gry (100% OFF)</div>
         <div class="deals-grid">
             {% for game in freebies %}
             <div class="card">
@@ -83,28 +138,32 @@
                 <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
-                    <div class="card-price">0.00 zł</div>
-                    <a href="{{ game.url }}" target="_blank" class="btn-claim">Odebrana automatycznie ➔</a>
+                    <div class="card-price">0.00 PLN / USD</div>
+                    <a href="{{ game.url }}" target="_blank" class="btn-claim">Odebrój w Sklepie ➔</a>
                 </div>
             </div>
             {% endfor %}
         </div>
 
-        <!-- Sekcja Top Przeceny -->
-        <div class="section-title">🔥 Top 10 Największych Promocji Dzisiaj</div>
+        <!-- SEKCJA TOP PROMOCJE -->
+        <div class="section-title">🔥 Top 10 Największych Promocji</div>
         <div class="deals-grid">
             {% for game in top_deals %}
             <div class="card">
                 <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Sklep: {{ game.store }}</div>
-                    <div class="card-price" style="margin-top:6px;">{{ game.price }}$ <span style="font-size:12px; color:var(--text-muted); text-decoration:line-through;">{{ game.old_price }}$</span></div>
-                    <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#21262d; color:white;">Zobacz ofertę ↗</a>
+                    <div class="card-store">Sklep: {{ game.store }}</div>
+                    <div class="price-box">
+                        <span class="card-price">${{ game.price }}</span>
+                        <span style="font-size:11px; color:var(--text-muted); text-decoration:line-through;">${{ game.old_price }}</span>
+                    </div>
+                    <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#21262d; color:white;">Przejdź do oferty ↗</a>
                 </div>
             </div>
             {% endfor %}
         </div>
+
     </div>
 
 </body>
