@@ -22,13 +22,11 @@
         .accounts-panel { max-width: 1000px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
         .accounts-panel h2 { font-size: 14px; margin-top: 0; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; }
         
-        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-        .account-card { background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; display: flex; flex-direction: column; gap: 8px; }
-        .account-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 14px; }
+        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .account-card { background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+        .account-header { font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
         
-        input[type="text"] { width: 100%; padding: 8px; background: #161b22; border: 1px solid #30363d; border-radius: 6px; color: white; font-size: 12px; box-sizing: border-box; }
-        
-        .btn { display: inline-block; text-align: center; background: #238636; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; width: 100%; box-sizing: border-box; }
+        .btn { display: block; text-align: center; background: #238636; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; }
         .btn-disconnect { background: #21262d; color: var(--red); border: 1px solid var(--red); }
 
         .container { max-width: 1000px; margin: 0 auto; }
@@ -36,7 +34,7 @@
         
         .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
         .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #30363d; display: flex; flex-direction: column; position: relative; }
-        .card-img { width: 100%; height: 120px; object-fit: cover; background: #000; }
+        .card-img { width: 100%; height: 130px; object-fit: cover; background: #000; }
         .badge-free { position: absolute; top: 8px; right: 8px; background: var(--accent); color: #000; font-weight: bold; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
         
         .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
@@ -61,66 +59,56 @@
             
             <!-- STEAM -->
             <div class="account-card">
-                <div class="account-header">
-                    <span>Steam</span>
-                    {% if connected.steam %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
-                </div>
+                <div class="account-header">Steam</div>
                 {% if connected.steam %}
-                    <div style="font-size:11px; color:var(--text-muted);">ID: {{ connected.steam }}</div>
-                    <a href="/disconnect/steam" class="btn btn-disconnect">Odłącz Konto</a>
+                    <span style="color:var(--accent); font-size:11px;">Połączono (ID: {{ connected.steam[:8] }}...)</span>
+                    <a href="/disconnect/steam" class="btn btn-disconnect">Odłącz</a>
                 {% else %}
-                    <a href="/login/steam" class="btn">Zaloguj przez Steam ↗</a>
+                    <a href="/login/steam" class="btn">Połącz Steam ↗</a>
                 {% endif %}
             </div>
 
             <!-- EPIC GAMES -->
             <div class="account-card">
-                <div class="account-header">
-                    <span>Epic Games</span>
-                    {% if connected.epic %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
-                </div>
+                <div class="account-header">Epic Games</div>
                 {% if connected.epic %}
-                    <div style="font-size:11px; color:var(--text-muted);">Użytkownik: {{ connected.epic }}</div>
-                    <a href="/disconnect/epic" class="btn btn-disconnect">Odłącz Konto</a>
+                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
+                    <a href="/disconnect/epic" class="btn btn-disconnect">Odłącz</a>
                 {% else %}
-                    <form action="/connect/epic" method="POST">
-                        <input type="text" name="username" placeholder="Nick / Email Epic" required style="margin-bottom:6px;">
-                        <button type="submit" class="btn">Zapisz Konto</button>
-                    </form>
+                    <a href="/login/epic" target="_blank" class="btn">Połącz Epic ↗</a>
+                {% endif %}
+            </div>
+
+            <!-- UBISOFT -->
+            <div class="account-card">
+                <div class="account-header">Ubisoft</div>
+                {% if connected.ubisoft %}
+                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
+                    <a href="/disconnect/ubisoft" class="btn btn-disconnect">Odłącz</a>
+                {% else %}
+                    <a href="/login/ubisoft" target="_blank" class="btn">Połącz Ubisoft ↗</a>
                 {% endif %}
             </div>
 
             <!-- XBOX -->
             <div class="account-card">
-                <div class="account-header">
-                    <span>Xbox</span>
-                    {% if connected.xbox %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
-                </div>
+                <div class="account-header">Xbox</div>
                 {% if connected.xbox %}
-                    <div style="font-size:11px; color:var(--text-muted);">Gamertag: {{ connected.xbox }}</div>
-                    <a href="/disconnect/xbox" class="btn btn-disconnect">Odłącz Konto</a>
+                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
+                    <a href="/disconnect/xbox" class="btn btn-disconnect">Odłącz</a>
                 {% else %}
-                    <form action="/connect/xbox" method="POST">
-                        <input type="text" name="username" placeholder="Xbox Gamertag" required style="margin-bottom:6px;">
-                        <button type="submit" class="btn">Zapisz Konto</button>
-                    </form>
+                    <a href="/login/xbox" target="_blank" class="btn">Połącz Xbox ↗</a>
                 {% endif %}
             </div>
 
             <!-- PLAYSTATION -->
             <div class="account-card">
-                <div class="account-header">
-                    <span>PlayStation</span>
-                    {% if connected.psn %}<span style="color:var(--accent); font-size:11px;">Połączono</span>{% endif %}
-                </div>
+                <div class="account-header">PlayStation</div>
                 {% if connected.psn %}
-                    <div style="font-size:11px; color:var(--text-muted);">PSN Online ID: {{ connected.psn }}</div>
-                    <a href="/disconnect/psn" class="btn btn-disconnect">Odłącz Konto</a>
+                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
+                    <a href="/disconnect/psn" class="btn btn-disconnect">Odłącz</a>
                 {% else %}
-                    <form action="/connect/psn" method="POST">
-                        <input type="text" name="username" placeholder="PSN ID" required style="margin-bottom:6px;">
-                        <button type="submit" class="btn">Zapisz Konto</button>
-                    </form>
+                    <a href="/login/psn" target="_blank" class="btn">Połącz PSN ↗</a>
                 {% endif %}
             </div>
 
@@ -130,7 +118,7 @@
     <div class="container">
         
         <!-- SEKCJA DARMOWE GRY -->
-        <div class="section-title">🎁 Aktualne Darmowe Gry (100% OFF)</div>
+        <div class="section-title">🎁 Aktualne Darmowe Gry Tygodnia (100% OFF)</div>
         <div class="deals-grid">
             {% for game in freebies %}
             <div class="card">
@@ -138,7 +126,8 @@
                 <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
-                    <div class="card-price">0.00 PLN / USD</div>
+                    <div class="card-store">Sklep: {{ game.store }}</div>
+                    <div class="card-price">0.00 PLN</div>
                     <a href="{{ game.url }}" target="_blank" class="btn-claim">Odebrój w Sklepie ➔</a>
                 </div>
             </div>
@@ -146,7 +135,7 @@
         </div>
 
         <!-- SEKCJA TOP PROMOCJE -->
-        <div class="section-title">🔥 Top 10 Największych Promocji</div>
+        <div class="section-title">🔥 Top 10 Największych Promocji Gier</div>
         <div class="deals-grid">
             {% for game in top_deals %}
             <div class="card">
@@ -154,7 +143,7 @@
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
                     <div class="card-store">Sklep: {{ game.store }}</div>
-                    <div class="price-box">
+                    <div style="margin-bottom: 10px;">
                         <span class="card-price">${{ game.price }}</span>
                         <span style="font-size:11px; color:var(--text-muted); text-decoration:line-through;">${{ game.old_price }}</span>
                     </div>
