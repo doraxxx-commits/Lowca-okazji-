@@ -17,59 +17,42 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            padding: 16px;
         }
         .container {
-            width: 100%;
-            max-width: 480px;
+            max-width: 600px;
+            margin: 0 auto 24px auto;
             background: var(--card-bg);
-            padding: 24px;
+            padding: 20px;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.05);
         }
         h1 {
-            font-size: 22px;
-            margin-bottom: 8px;
-            color: var(--accent-color);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 14px;
+            font-size: 20px;
             margin-top: 0;
-            margin-bottom: 24px;
+            color: var(--accent-color);
         }
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
         label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         input {
             width: 100%;
-            padding: 12px 14px;
+            padding: 12px;
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 10px;
             color: white;
             font-size: 15px;
             box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input:focus {
-            border-color: var(--accent-color);
         }
         button {
             width: 100%;
@@ -81,32 +64,136 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.3);
         }
-        button:active {
-            transform: scale(0.98);
+
+        /* Sekcja kafelków */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-img-container {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: #0f172a;
+            position: relative;
+        }
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 210, 255, 0.9);
+            color: #000;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        .card-body {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 6px 0;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .card-price {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+        }
+        .card-btn {
+            display: block;
+            text-align: center;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>🔍 Łowca Okazji Vinted</h1>
-        <p class="subtitle">Wpisz czego szukasz, a bot powiadomi Cię o nowych super ofertach.</p>
-        
+        <h1>🔍 Szukaj ofert na Vinted</h1>
         <form action="/add" method="POST">
             <div class="form-group">
-                <label for="query">Szukana fraza</label>
-                <input type="text" id="query" name="query" placeholder="np. Jordan 1" required>
+                <label>Szukana fraza</label>
+                <input type="text" name="query" value="{{ query if query else '' }}" placeholder="np. Jordan 1" required>
             </div>
-
             <div class="form-group">
-                <label for="price">Maksymalna cena (PLN)</label>
-                <input type="number" id="price" name="price" placeholder="np. 100" required>
+                <label>Maksymalna cena (PLN)</label>
+                <input type="number" name="price" value="{{ max_price if max_price else '' }}" placeholder="np. 150" required>
             </div>
-
-            <button type="submit">Uruchom wyszukiwanie</button>
+            <button type="submit">Szukaj okazji</button>
         </form>
     </div>
+
+    {% if offers is defined %}
+        {% if offers %}
+            <h2 style="text-align:center; color: var(--accent-color);">Znalezione oferty: {{ offers|length }}</h2>
+            <div class="results-grid">
+                {% for item in offers %}
+                <div class="card">
+                    <div class="card-img-container">
+                        <img src="{{ item.photo }}" class="card-img" alt="{{ item.title }}">
+                        {% if item.size %}
+                            <span class="card-badge">Rozmiar: {{ item.size }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ item.title }}</h3>
+                        <div class="card-price">{{ item.price }} PLN</div>
+                        <div class="card-info">
+                            👤 <b>Sprzedawca:</b> {{ item.user }}<br>
+                            🏷️ <b>Marka:</b> {{ item.brand if item.brand else 'Brak' }}<br>
+                            ✨ <b>Stan:</b> {{ item.status }}
+                        </div>
+                        <a href="{{ item.url }}" target="_blank" class="card-btn">Zobacz na Vinted ↗</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="text-align:center; color: #ef4444; font-size:16px;">
+                Brak ofert dla frazy "<b>{{ query }}</b>" do {{ max_price }} PLN lub Vinted tymczasowo zablokowało połączenie (zabezpieczenie botowe).
+            </p>
+        {% endif %}
+    {% endif %}
+
 </body>
 </html>
