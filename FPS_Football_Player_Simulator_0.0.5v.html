@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPS Football Player Simulator 0.0.5v</title>
+<style>
+:root{--bg:#07100b;--panel:#101b15;--panel2:#17261d;--line:#2b4537;--green:#20c77a;--gold:#f0c75e;--red:#ef6868;--blue:#62a8ff;--text:#f2f7f4;--muted:#9eb1a6}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18462f,#07100b 52%,#030604);font-family:Segoe UI,Arial,sans-serif;color:var(--text);min-height:100vh}.app{max-width:1000px;margin:auto;padding:12px}
+.top{background:linear-gradient(135deg,#1b4b32,#0b1b13);border:1px solid #32684c;border-radius:18px;padding:18px;box-shadow:0 12px 35px #0009}.logo{font-size:23px;font-weight:950;letter-spacing:.7px}.version{color:#7fe0ae;font-size:11px;font-weight:900;margin-top:4px}.creator{color:#d4e5dc;font-size:12px;margin-top:7px}
+.card{background:linear-gradient(145deg,#122019,#0c1510);border:1px solid var(--line);border-radius:15px;padding:15px;margin:10px 0;box-shadow:0 7px 22px #0005}h2,h3,h4{margin:0 0 11px}p{line-height:1.45}.muted,.tiny{color:var(--muted)}.tiny{font-size:11px}
+label{display:block;color:#b8c9c0;font-size:13px;margin:9px 0 5px}input,select{width:100%;padding:11px;background:#08100c;color:#fff;border:1px solid #32473b;border-radius:9px}
+button{width:100%;border:0;border-radius:10px;padding:11px;margin-top:7px;background:var(--green);color:#03150d;font-weight:900;cursor:pointer}button.secondary{background:#26372e;color:#fff}button.gold{background:var(--gold);color:#171006}button.red{background:#7e3035;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{background:#0a1410;border:1px solid #26392e;border-radius:11px;padding:10px}.stat small{color:var(--muted);font-size:10px}.stat b{display:block;font-size:17px;margin-top:2px;overflow:hidden;text-overflow:ellipsis}
+.nav{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0}.nav button{background:#16261e;color:#dceae3;font-size:11px;padding:10px;margin:0}.nav button.active{background:var(--green);color:#03150d}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.actions button{margin:0}.club-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.club{background:#0a1510;border:1px solid #294033;border-radius:12px;padding:12px}.club.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}.club b{font-size:15px}.badge{display:inline-block;border-radius:99px;padding:3px 7px;background:#263c31;color:#c9e8d8;font-size:10px;font-weight:800;margin-left:4px}.your{background:#1a6a45}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px 5px;border-bottom:1px solid #24362b;text-align:left}th{color:#9db1a5}.highlight{background:#163a28}.score{font-size:17px;font-weight:950}.match{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 2px;border-bottom:1px solid #26362e}.event{border-left:4px solid var(--green)}.choice{background:#12241a;border:1px solid #2b4a39;border-radius:11px;padding:11px;margin:8px 0}.progress{height:7px;background:#17241d;border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--green)}
+@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.club-grid{grid-template-columns:1fr}.nav{grid-template-columns:repeat(4,1fr)}.actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<div class="logo">⚽ FPS FOOTBALL PLAYER SIMULATOR</div>
+<div class="version">0.0.5v • CAREER & WORLD ENGINE</div>
+<div class="creator">by.mEmmor</div>
+</header>
+
+<section id="creation">
+<div class="card">
+<h2>🎮 Nowa kariera</h2>
+<label>Imię i nazwisko</label><input id="name" value="Zbigniew Mandziejewicz">
+<label>Rok urodzenia</label><input id="birth" type="number" value="2008" min="1980" max="2012">
+<label>Pozycja</label><select id="pos"><option>Napastnik</option><option>Pomocnik</option><option>Obrońca</option><option>Bramkarz</option></select>
+<label>Startowy OVR</label><select id="startOvr"><option value="40">40 — B-klasowy wyjadacz</option><option value="48" selected>48 — solidny amator</option><option value="55">55 — półprofesjonalista</option><option value="63">63 — duży talent</option></select>
+</div>
+<div class="card"><h3>🏟️ Wybierz klub startowy</h3><p class="tiny">Zawsze otrzymasz 4 oferty dopasowane do OVR. Im wyższy OVR, tym mocniejsze kluby.</p><div id="starter" class="club-grid"></div></div>
+<button onclick="start()">ROZPOCZNIJ KARIERĘ</button>
+<button class="secondary" onclick="load()">WCZYTAJ ZAPIS</button>
+</section>
+
+<section id="game" style="display:none">
+<div id="dashboard"></div>
+<nav class="nav">
+<button id="nc" onclick="tab('career')">Kariera</button>
+<button id="nl" onclick="tab('league')">Tabela</button>
+<button id="nm" onclick="tab('matches')">Mecze</button>
+<button id="nt" onclick="tab('transfers')">Transfery</button>
+<button id="nf" onclick="tab('finance')">Finanse</button>
+<button id="np" onclick="tab('cup')">Puchar Polski</button>
+<button id="nr" onclick="tab('national')">🇵🇱 Kadra</button>
+</nav>
+<div id="view"></div>
+</section>
+</div>
+
+<script>
+const DB={
+"Ekstraklasa":[["Legia Warszawa",76,65000],["Lech Poznań",75,60000],["Raków Częstochowa",74,55000],["Jagiellonia Białystok",73,50000],["Pogoń Szczecin",72,45000],["Górnik Zabrze",71,38000],["Widzew Łódź",70,35000],["Cracovia",69,32000],["GKS Katowice",68,28000],["Piast Gliwice",68,27000],["Zagłębie Lubin",67,26000],["Motor Lublin",66,24000],["Radomiak Radom",66,23000],["Korona Kielce",65,21000],["Lechia Gdańsk",65,20000],["Wisła Płock",64,19000],["Arka Gdynia",64,18000],["Bruk-Bet Termalica",63,17000]],
+"1 Liga":[["Wisła Kraków",63,22000],["Śląsk Wrocław",62,19000],["Ruch Chorzów",61,16000],["Miedź Legnica",60,14000],["Wieczysta Kraków",60,18000],["ŁKS Łódź",59,13000],["Stal Mielec",59,12000],["Polonia Warszawa",58,11000],["Puszcza Niepołomice",58,10500],["Odra Opole",57,9500],["Chrobry Głogów",56,9000],["Stal Rzeszów",56,8500],["Pogoń Grodzisk Maz.",55,8000],["Polonia Bytom",55,7800],["Warta Poznań",54,7500],["Pogoń Siedlce",53,7000],["Znicz Pruszków",53,6800],["Unia Skierniewice",52,6500]],
+"2 Liga":[["Avia Świdnik",52,6000],["GKS Tychy",52,6200],["Podbeskidzie",51,5800],["Hutnik Kraków",50,5200],["Resovia Rzeszów",50,5000],["Zawisza Bydgoszcz",49,4600],["Chojniczanka",48,4300],["Górnik Łęczna",48,4200],["Stal Stalowa Wola",47,3900],["Sandecja Nowy Sącz",46,3600],["Lechia Zielona Góra",45,3400],["Olimpia Grudziądz",44,3100],["Rekord Bielsko-Biała",43,2900],["Podhale Nowy Targ",42,2700],["Świt Szczecin",41,2500],["Sokół Kleczew",40,2200],["Śląsk II Wrocław",38,1900],["Legia II Warszawa",35,1600]]
+};
+const NAMES=["Kacper Nowak","Jakub Wrona","Adam Kaczmarek","Michał Lis","Mateusz Pawlak","Szymon Król","Antoni Zieliński","Bartosz Mazur","Filip Dudek","Oskar Kubiak","Jan Bąk","Wiktor Gajda","Mikołaj Urban","Igor Zając","Patryk Wieczorek","Piotr Sobczak"];
+const POS=["Napastnik","Pomocnik","Obrońca","Bramkarz"];
+let world={clubs:{},players:[],seasons:{}};
+let p={name:"",birth:2008,pos:"Napastnik",ovr:48,form:60,money:0,year:2026,club:null,league:null,stats:{m:0,min:0,g:0,a:0},matches:[],next:null,national:false,cupStage:null};
+let offers=[],starterIndex=0;
+
+function $(x){return document.getElementById(x)}
+function fmt(n){return Math.round(n).toLocaleString("pl-PL")}
+function age(){return p.year-p.birth}
+function allClubs(){return Object.entries(DB).flatMap(([l,a])=>a.map(c=>({league:l,name:c[0],base:c[1],wage:c[2]})))}
+
+function makePlayer(club,ovr,i){
+let rating=Math.max(35,Math.min(88,ovr-12+Math.floor(Math.random()*18)));
+let potential=Math.max(rating,rating+Math.floor(Math.random()*17));
+return{id:Math.random().toString(36).slice(2),club,name:NAMES[(i+Math.floor(Math.random()*NAMES.length))%NAMES.length],age:18+Math.floor(Math.random()*14),pos:POS[i%4],ovr:rating,potential,value:Math.max(.15,Math.round(rating*rating*(rating<70?1.1:1.35)*100)/100),wage:Math.round(rating*110)}
+}
+
+function initWorld(){
+if(Object.keys(world.clubs).length)return;
+allClubs().forEach(c=>{
+let o=Math.max(32,Math.min(82,c.base+Math.floor(Math.random()*7)-3));
+world.clubs[c.name]={name:c.name,league:c.league,ovr:o,wage:c.wage,budget:Math.round(o*o*1300),fans:10000+o*2500,players:[],history:[]};
+for(let i=0;i<16;i++)world.clubs[c.name].players.push(makePlayer(c.name,o,i));
+});
+}
+
+function starterOffers(){
+initWorld();let o=+$("startOvr").value;
+let pool=allClubs().filter(c=>Math.abs(world.clubs[c.name].ovr-o)<=7).sort(()=>Math.random()-.5).slice(0,4);
+offers=pool;starterIndex=0;
+$("starter").innerHTML=offers.map((c,i)=>`<div class="club ${i===0?"selected":""}" id="s${i}" onclick="pickStart(${i})"><b>${c.name}</b><span class="badge">${c.league}</span><p class="tiny">OVR ${world.clubs[c.name].ovr} • ${fmt(c.wage)} PLN/mies.</p></div>`).join("");
+}
+$("startOvr").addEventListener("change",starterOffers);
+starterOffers();
+function pickStart(i){starterIndex=i;document.querySelectorAll(".club").forEach(x=>x.classList.remove("selected"));$("s"+i).classList.add("selected")}
+
+function start(){
+initWorld();let c=offers[starterIndex],w=world.clubs[c.name];
+p={name:$("name").value||"Zawodnik",birth:+$("birth").value,pos:$("pos").value,ovr:+$("startOvr").value,form:60,money:0,year:2026,club:{name:c.name,wage:w.wage},league:w.league,stats:{m:0,min:0,g:0,a:0},matches:[],next:null,national:false,cupStage:null};
+$("creation").style.display="none";$("game").style.display="block";newMatch();tab("career")
+}
+
+function dash(){
+let c=world.clubs[p.club.name];
+$("dashboard").innerHTML=`<div class="card"><div class="grid">
+<div class="stat"><small>ZAWODNIK</small><b>${p.name}</b><span class="tiny">${p.pos} • ${age()} lat</span></div>
+<div class="stat"><small>OVR / FORMA</small><b>${p.ovr} / ${p.form}</b><span class="tiny">100 max</span></div>
+<div class="stat"><small>KLUB</small><b>${p.club.name}</b><span class="tiny">${p.league} • OVR ${c.ovr}</span></div>
+<div class="stat"><small>KONTO</small><b>${fmt(p.money)}</b><span class="tiny">PLN</span></div></div></div>`
+}
+
+function tab(t){
+dash();let ids={career:"nc",league:"nl",matches:"nm",transfers:"nt",finance:"nf",cup:"np",national:"nr"};
+document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));$(ids[t]).classList.add("active");
+if(t==="career")career();if(t==="league")league();if(t==="matches")matches();if(t==="transfers")transfers();if(t==="finance")finance();if(t==="cup")cup();if(t==="national")national()
+}
+
+function career(){
+$("view").innerHTML=`<div class="card event"><h2>🎮 Sezon ${p.year}/${p.year+1}</h2>
+<p>Decyzje wpływają na formę i OVR. Mecze ligowe tworzą terminarz i tabelę, a ważniejsze spotkania mają interaktywne akcje.</p>
+<div class="actions">
+<button onclick="decision('train')">🏋️ Trening<br><span class="tiny">+2 OVR / -8 formy</span></button>
+<button onclick="decision('rest')">🧑‍⚕️ Regeneracja<br><span class="tiny">+15 formy</span></button>
+<button onclick="decision('tactic')">🧠 Taktyka<br><span class="tiny">+1 OVR / +6 formy</span></button>
+<button onclick="decision('social')">🎉 Integracja<br><span class="tiny">+12 formy / -1 OVR</span></button>
+</div></div>
+<div class="card"><h3>📅 Najbliższy mecz</h3><div class="match"><div><span class="tiny">${p.next.comp}</span><br><b>${p.club.name}</b> vs <b>${p.next.opp}</b></div><button style="max-width:190px" onclick="play()">ROZEGRAJ</button></div></div>
+<div class="card"><h3>📊 Statystyki sezonu</h3><p>Mecze <b>${p.stats.m}</b> • Minuty <b>${p.stats.min}</b> • ⚽ <b>${p.stats.g}</b> • 🅰️ <b>${p.stats.a}</b></p></div>
+<button class="secondary" onclick="save()">💾 ZAPISZ GRĘ</button>`
+}
+
+function decision(x){
+if(x==="train"){p.ovr=Math.min(99,p.ovr+2);p.form-=8}
+if(x==="rest")p.form+=15;
+if(x==="tactic"){p.ovr++;p.form+=6}
+if(x==="social"){p.ovr=Math.max(20,p.ovr-1);p.form+=12}
+p.form=Math.max(10,Math.min(100,p.form));newMatch();tab("career")
+}
+
+function newMatch(){
+let arr=Object.values(world.clubs).filter(c=>c.league===p.league&&c.name!==p.club.name);
+let opp=arr[Math.floor(Math.random()*arr.length)];
+p.next={opp:opp.name,comp:Math.random()<.13?"🏆 Puchar Polski":"⚽ Liga",important:Math.random()<.22}
+}
+
+function simulate(a,b){
+let A=world.clubs[a].ovr+(a===p.club.name?p.form/20:0),B=world.clubs[b].ovr;
+return{gf:Math.max(0,Math.round(Math.random()*2+(A-B)/18)),ga:Math.max(0,Math.round(Math.random()*2+(B-A)/18))}
+}
+function play(){if(p.next.important)important();else finishMatch(simulate(p.club.name,p.next.opp),p.next.comp)}
+function important(){
+$("view").innerHTML=`<div class="card event"><h2>⭐ WAŻNY MOMENT MECZU</h2><p><b>${p.club.name}</b> — <b>${p.next.opp}</b></p>
+<div class="choice"><b>Masz piłkę w ataku.</b><button onclick="action('shot')">⚽ STRZAŁ</button><button class="secondary" onclick="action('pass')">🎯 PODANIE PROSTOPADŁE</button><button class="secondary" onclick="action('dribble')">🏃 DRYBLING</button></div>
+<div class="choice"><b>Rywal wychodzi z kontrą.</b><button onclick="action('tackle')">🛡️ ODBIÓR</button><button class="secondary" onclick="action('press')">💨 PRESSING</button></div></div>`
+}
+function action(a){
+let chance=p.ovr+p.form/3+(a==="pass"?8:a==="tackle"?7:a==="dribble"?4:0),ok=Math.random()*100<Math.min(94,chance);
+let r=simulate(p.club.name,p.next.opp);
+if(ok&&a==="shot")r.gf++;if(!ok&&a==="tackle")r.ga++;if(ok&&a==="pass")p.stats.a++;if(ok&&a==="shot")p.stats.g++;
+p.form=Math.max(10,Math.min(100,p.form+(ok?4:-4)));finishMatch(r,"⭐ Ważny mecz")
+}
+function finishMatch(r,comp){
+p.stats.m++;p.stats.min+=55+Math.floor(Math.random()*36);
+let chance=Math.min(.5,(p.ovr+p.form)/300);
+if(Math.random()<chance)p.stats.g++;if(Math.random()<chance*.8)p.stats.a++;
+p.form=Math.max(10,Math.min(100,p.form+(r.gf>=r.ga?3:-3)));
+p.money+=p.club.wage;
+p.matches.unshift({year:p.year,home:p.club.name,away:p.next.opp,gf:r.gf,ga:r.ga,comp});
+let c=world.clubs[p.club.name];c.budget+=r.gf>=r.ga?60000:20000;
+alert(`${p.club.name} ${r.gf}:${r.ga} ${p.next.opp}`);
+if(p.stats.m>=18){seasonEnd();return}newMatch();tab("career")
+}
+
+function makeTable(l){
+let arr=Object.values(world.clubs).filter(c=>c.league===l).map(c=>({club:c,pts:0,m:0,w:0,d:0,l:0,gf:0,ga:0}));
+for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++){
+let A=arr[i],B=arr[j],ra=A.club.ovr+Math.random()*8,rb=B.club.ovr+Math.random()*8;
+let gf=Math.max(0,Math.round(Math.random()*2+(ra-rb)/22)),ga=Math.max(0,Math.round(Math.random()*2+(rb-ra)/22));
+A.m++;B.m++;A.gf+=gf;A.ga+=ga;B.gf+=ga;B.ga+=gf;
+if(gf>ga){A.pts+=3;A.w++;B.l++}else if(ga>gf){B.pts+=3;B.w++;A.l++}else{A.pts++;B.pts++;A.d++;B.d++}
+}
+arr.sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga));return arr
+}
+
+function league(){
+let t=makeTable(p.league);
+$("view").innerHTML=`<div class="card"><h2>🏆 ${p.league} — ${p.year}</h2>
+<table><tr><th>#</th><th>Klub</th><th>M</th><th>W</th><th>R</th><th>P</th><th>OVR</th></tr>
+${t.map((x,i)=>`<tr class="${x.club.name===p.club.name?"highlight":""}"><td>${i+1}</td><td>${x.club.name}${x.club.name===p.club.name?'<span class="badge your">TWÓJ KLUB</span>':""}</td><td>${x.m}</td><td>${x.w}</td><td>${x.d}</td><td><b>${x.pts}</b></td><td>${x.club.ovr}</td></tr>`).join("")}</table>
+<p class="tiny">🟢 1–2 = bezpośredni awans • 🟡 3–6 = baraże • 🔴 końcowe miejsca = spadek.</p></div>`
+}
+function matches(){
+$("view").innerHTML=`<div class="card"><h2>📅 Mecze</h2>${p.matches.slice(0,30).map(m=>`<div class="match"><div><span class="tiny">${m.comp} • ${m.year}</span><br>${m.home} — ${m.away}</div><b class="score">${m.gf}:${m.ga}</b></div>`).join("")||"<p class='muted'>Brak rozegranych meczów.</p>"}</div>`
+}
+function transfers(){
+let players=Object.values(world.clubs).flatMap(c=>c.players);
+let market=players.filter(x=>x.age<28).sort((a,b)=>b.ovr-a.ovr).slice(0,40);
+$("view").innerHTML=`<div class="card"><h2>🔄 Rynek transferowy</h2><p class="tiny">Każdy klub ma fikcyjną kadrę. Transfery AI zmieniają siłę klubów i mogą prowadzić do awansów i spadków.</p>
+<table><tr><th>Zawodnik</th><th>Klub</th><th>Wiek</th><th>Pozycja</th><th>OVR</th><th>Pot.</th><th>Wartość</th></tr>
+${market.map(x=>`<tr><td>${x.name}</td><td>${x.club}</td><td>${x.age}</td><td>${x.pos[0]}</td><td>${x.ovr}</td><td>${x.potential}</td><td>${fmt(x.value)} tys.</td></tr>`).join("")}</table>
+<button onclick="aiTransfers()">▶️ SYMULUJ TRANSFERY KLUBÓW</button></div>`
+}
+function aiTransfers(){
+let clubs=Object.values(world.clubs),moves=0;
+for(let i=0;i<18;i++){
+let buyer=clubs[Math.floor(Math.random()*clubs.length)];
+let seller=clubs.filter(c=>c.name!==buyer.name)[Math.floor(Math.random()*(clubs.length-1))];
+let candidates=seller.players.filter(x=>x.ovr>=buyer.ovr-14&&x.ovr<=buyer.ovr+6);
+if(!candidates.length)continue;
+let pl=candidates[Math.floor(Math.random()*candidates.length)],fee=Math.max(.2,pl.value*(.7+Math.random()));
+if(buyer.budget>fee*1000){
+seller.players=seller.players.filter(x=>x.id!==pl.id);buyer.players.push(pl);buyer.budget-=fee*1000;seller.budget+=fee*1000;pl.club=buyer.name;pl.value=fee;moves++;
+buyer.ovr=Math.max(30,Math.min(84,Math.round((buyer.ovr+pl.ovr/13)*.96)));
+seller.ovr=Math.max(30,Math.min(84,Math.round((seller.ovr-pl.ovr/16)*1.01)));
+}}
+alert(`Okno transferowe zakończone.\nLiczba transferów AI: ${moves}\nSiła klubów została przeliczona.`);tab("transfers")
+}
+function finance(){
+let c=world.clubs[p.club.name];
+$("view").innerHTML=`<div class="card"><h2>💰 Finanse: ${c.name}</h2><div class="grid">
+<div class="stat"><small>BUDŻET</small><b>${fmt(c.budget)}</b><span class="tiny">PLN</span></div>
+<div class="stat"><small>OVR</small><b>${c.ovr}</b></div>
+<div class="stat"><small>FANI</small><b>${fmt(c.fans)}</b></div>
+<div class="stat"><small>PŁACE</small><b>${fmt(c.wage)}</b><span class="tiny">/ mies.</span></div></div>
+<h3>Stabilność finansowa</h3><div class="progress"><div class="bar" style="width:${Math.min(100,c.budget/100000)}%"></div></div>
+<p class="tiny">Budżet zmienia się przez mecze, transfery i sezon. Kluby z problemami finansowymi będą ograniczały transfery.</p></div>`
+}
+function cup(){
+if(!p.cupStage)p.cupStage="Losowanie";
+$("view").innerHTML=`<div class="card"><h2>🏆 Puchar Polski</h2><p>Drabinka: 1/32 → 1/16 → 1/8 → ćwierćfinał → półfinał → finał.</p>
+<p>Aktualny status: <b>${p.cupStage}</b></p><button onclick="cupPlay()">ROZEGRAJ / LOSUJ MECZ PUCHARU</button></div>`
+}
+function cupPlay(){
+let stages=["1/32 finału","1/16 finału","1/8 finału","Ćwierćfinał","Półfinał","FINAŁ"];
+let i=stages.indexOf(p.cupStage);if(i<0)i=0;
+let arr=Object.values(world.clubs).filter(c=>c.name!==p.club.name);
+let opp=arr[Math.floor(Math.random()*arr.length)];
+let r=simulate(p.club.name,opp.name);
+if(Math.random()<.2)importantCup(opp.name);else{
+alert(`🏆 Puchar Polski\n${p.club.name} ${r.gf}:${r.ga} ${opp.name}`);
+if(r.gf>r.ga&&i<5)p.cupStage=stages[i+1];else if(r.gf<=r.ga)p.cupStage="Odpadłeś";
+tab("cup")}
+}
+function importantCup(opp){
+$("view").innerHTML=`<div class="card event"><h2>🏆 ${p.cupStage}</h2><p>${p.club.name} — ${opp}</p><button onclick="cupDecision('shot','${opp}')">⚽ Strzał</button><button onclick="cupDecision('pass','${opp}')" class="secondary">🎯 Podanie</button><button onclick="cupDecision('tackle','${opp}')" class="secondary">🛡️ Odbiór</button></div>`
+}
+function cupDecision(a,opp){
+let ok=Math.random()*100<(p.ovr+p.form/3+(a==="pass"?8:0)),r=simulate(p.club.name,opp);
+if(ok&&a==="shot")r.gf++;if(!ok&&a==="tackle")r.ga++;
+let stages=["1/32 finału","1/16 finału","1/8 finału","Ćwierćfinał","Półfinał","FINAŁ"],i=stages.indexOf(p.cupStage);
+alert(`🏆 ${p.club.name} ${r.gf}:${r.ga} ${opp}`);
+if(r.gf>r.ga&&i<5)p.cupStage=stages[i+1];else if(r.gf<=r.ga)p.cupStage="Odpadłeś";tab("cup")
+}
+function national(){
+let chance=p.ovr>=72?Math.min(95,40+(p.ovr-72)*8+p.form*.2):0;
+$("view").innerHTML=`<div class="card event"><h2>🇵🇱 Reprezentacja Polski</h2><div class="grid">
+<div class="stat"><small>TWÓJ OVR</small><b>${p.ovr}</b></div><div class="stat"><small>FORMA</small><b>${p.form}</b></div>
+<div class="stat"><small>SZANSA POWOŁANIA</small><b>${Math.round(chance)}%</b></div><div class="stat"><small>STATUS</small><b>${p.national?"KADRA":"KANDYDAT"}</b></div></div>
+${p.ovr>=72?'<button onclick="callUp()">📩 SPRAWDŹ POWOŁANIE</button>':"<p class='muted'>Cel: około 72 OVR. Wyższy OVR i dobra forma zwiększają szansę.</p>"}</div>
+<div class="card"><h3>🌍 Mistrzostwa</h3><p>🇪🇺 EURO • 🌎 Mistrzostwa Świata • Liga Narodów • Eliminacje</p><p class="tiny">Powołanie zależy od OVR, formy i pozycji. W turniejach będą grupy, tabela, 1/8, ćwierćfinał, półfinał i finał.</p></div>`
+}
+function callUp(){let chance=Math.min(95,40+(p.ovr-72)*8+p.form*.2);if(Math.random()*100<chance){p.national=true;alert("🇵🇱 POWOŁANIE DO REPREZENTACJI!")}else alert("Selekcjoner tym razem Cię pominął.");national()}
+
+function seasonEnd(){
+let t=makeTable(p.league),idx=t.findIndex(x=>x.club.name===p.club.name),place=idx+1,old=p.league;
+let result="Bez zmiany ligi";
+if(old==="1 Liga"&&place<=2){p.league="Ekstraklasa";result="🟢 AWANS DO EKSTRAKLASY!"}
+else if(old==="2 Liga"&&place<=2){p.league="1 Liga";result="🟢 AWANS DO 1 LIGI!"}
+else if(old==="Ekstraklasa"&&place>=17){p.league="1 Liga";result="🔴 SPADEK DO 1 LIGI!"}
+else if(old==="1 Liga"&&place>=17){p.league="2 Liga";result="🔴 SPADEK DO 2 LIGI!"}
+else if((old==="1 Liga"||old==="2 Liga")&&place>=3&&place<=6){result="🟡 BARAŻE O AWANS"}
+let c=world.clubs[p.club.name],oldOvr=c.ovr;
+c.ovr=Math.max(30,Math.min(84,c.ovr+(place<=3?2:place>=15?-2:(Math.random()>.5?1:-1))));
+c.budget+=Math.round((Math.random()-.35)*3000000);c.budget=Math.max(100000,c.budget);
+c.history.push({year:p.year,place,ovr:c.ovr});
+p.ovr=Math.max(20,Math.min(99,p.ovr+(p.form>=70?2:p.form<40?-1:1)));p.year++;p.stats={m:0,min:0,g:0,a:0};p.form=50;
+alert(`KONIEC SEZONU!\n${old}: ${place}. miejsce\n${result}\nOVR klubu: ${oldOvr} → ${c.ovr}`);
+if((old==="1 Liga"||old==="2 Liga")&&place>=3&&place<=6)playoff(old,place);else transferWindow()
+}
+function playoff(old,place){
+let win=Math.random()>.42;
+alert(`BARAŻE\n${win?"🟢 WYGRANA — AWANS!":"🔴 PORAŻKA — ZOSTAJESZ W LIDZE."}`);
+if(win)p.league=old==="1 Liga"?"Ekstraklasa":"1 Liga";transferWindow()
+}
+function transferWindow(){
+let pool=allClubs().filter(c=>c.league===p.league&&c.name!==p.club.name&&Math.abs(world.clubs[c.name].ovr-p.ovr)<=9).sort(()=>Math.random()-.5).slice(0,4);
+$("view").innerHTML=`<div class="card"><h2>🔁 Okno transferowe</h2><p>Wybierz klub na następny sezon. Twój obecny klub jest zawsze dostępny.</p><div class="club-grid">
+<div class="club selected"><b>${p.club.name}</b><span class="badge your">TWÓJ KLUB</span><p>${p.league} • OVR ${world.clubs[p.club.name].ovr}</p><button onclick="choose('${p.club.name}','${p.league}',${p.club.wage})">ZOSTAJĘ</button></div>
+${pool.map(c=>`<div class="club"><b>${c.name}</b><span class="badge">${c.league}</span><p>OVR ${world.clubs[c.name].ovr} • ${fmt(c.wage)} PLN</p><button onclick="choose('${c.name}','${c.league}',${c.wage})">PODPISZ</button></div>`).join("")}</div></div>`
+}
+function choose(n,l,w){p.club={name:n,wage:w};p.league=l;newMatch();tab("career")}
+function save(){localStorage.setItem("fps005save",JSON.stringify({p,world}));alert("💾 Zapisano FPS Football Player Simulator 0.0.5v")}
+function load(){let s=localStorage.getItem("fps005save");if(!s){alert("Brak zapisu.");return}let x=JSON.parse(s);p=x.p;world=x.world;$("creation").style.display="none";$("game").style.display="block";newMatch();tab("career")}
+</script>
+</body>
+</html>
