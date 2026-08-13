@@ -31,7 +31,7 @@
         .btn-disconnect { background: #21262d; color: var(--red); border: 1px solid var(--red); }
 
         .container { max-width: 1000px; margin: 0 auto; }
-        .section-title { font-size: 18px; color: var(--accent); margin: 30px 0 15px 0; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .section-title { font-size: 18px; color: var(--accent); margin: 30px 0 15px 0; font-weight: bold; }
         
         .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
         .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #30363d; display: flex; flex-direction: column; position: relative; }
@@ -46,7 +46,6 @@
         .card-price { font-size: 16px; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
         
         .timer-box { background: #0d1117; padding: 8px; border-radius: 6px; font-size: 11px; color: var(--yellow); font-weight: bold; text-align: center; margin-bottom: 10px; border: 1px dashed var(--yellow); }
-        
         .btn-claim { background: var(--accent); color: black; border: none; padding: 8px; border-radius: 6px; font-weight: bold; text-align: center; text-decoration: none; font-size: 12px; margin-top: auto; }
     </style>
 </head>
@@ -57,7 +56,7 @@
         <div style="font-size:12px;">Auto-Bot: <span style="color:var(--accent); font-weight:bold;">AKTYWNY 🟢</span></div>
     </div>
 
-    <!-- PANEL POŁĄCZONYCH KONT -->
+    <!-- POŁĄCZONE KONTA -->
     <div class="accounts-panel">
         <h2>Twoje Połączone Konta</h2>
         <div class="accounts-grid">
@@ -103,7 +102,7 @@
             {% endfor %}
         </div>
 
-        <!-- NADCHODZĄCA DARMOWA GRA + ZEGAR -->
+        <!-- NADCHODZĄCE DARMOWE GRY -->
         {% if upcoming_freebies %}
         <div class="section-title">⏳ Następna Darmowa Gra (Zapowiedź)</div>
         <div class="deals-grid">
@@ -114,7 +113,7 @@
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
                     <div class="card-store">Sklep: {{ game.store }}</div>
-                    <div class="timer-box">Odblokowanie za: <span class="countdown" data-time="{{ game.start_date }}">Ładowanie...</span></div>
+                    <div class="timer-box">Data odblokowania: {{ game.start_date[:10] if game.start_date else 'Wkrótce' }}</div>
                     <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#30363d; color:white;">Zobacz w Sklepie ↗</a>
                 </div>
             </div>
@@ -122,8 +121,8 @@
         </div>
         {% endif %}
 
-        <!-- TOP 10 PROMOCJI OD -50% DO -90% -->
-        <div class="section-title">🔥 Top 10 Promocji (Od -50% do -90%)</div>
+        <!-- TOP 10 PROMOCJI -->
+        <div class="section-title">🔥 Top 10 Największych Promocji Gier</div>
         <div class="deals-grid">
             {% for game in top_deals %}
             <div class="card">
@@ -143,31 +142,6 @@
         </div>
 
     </div>
-
-    <!-- Skrypt Zegara Odliczającego -->
-    <script>
-        function updateCountdowns() {
-            document.querySelectorAll('.countdown').forEach(el => {
-                const targetDate = new Date(el.getAttribute('data-time')).getTime();
-                const now = new Date().getTime();
-                const diff = targetDate - now;
-
-                if (diff <= 0) {
-                    el.innerHTML = "JUŻ DOSTĘPNA!";
-                    return;
-                }
-
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                el.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            });
-        }
-        setInterval(updateCountdowns, 1000);
-        updateCountdowns();
-    </script>
 
 </body>
 </html>
