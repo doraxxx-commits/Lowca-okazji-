@@ -3,153 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wyszukiwarka OLX</title>
+    <title>Auto-Claimer & Łowca Gier</title>
     <style>
         :root {
-            --olx-bg: #002f34;
-            --olx-mint: #23e5db;
-            --card-bg: #ffffff;
-            --gray-bg: #f2f4f5;
+            --bg: #0d1117;
+            --card-bg: #161b22;
+            --accent: #00ff88;
+            --steam: #171a21;
+            --epic: #2a2a2a;
+            --text: #f0f6fc;
+            --text-muted: #8b949e;
         }
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--gray-bg); margin: 0; padding: 0; color: #002f34; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         
-        header { background-color: var(--olx-bg); padding: 25px 15px 35px 15px; color: white; text-align: center; }
-        header h1 { margin: 0; font-size: 22px; color: var(--olx-mint); }
+        .header { max-width: 1100px; margin: 0 auto 30px auto; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 20px; }
+        .header h1 { margin: 0; color: var(--accent); font-size: 24px; }
         
-        .search-box {
-            max-width: 800px;
-            margin: -20px auto 25px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+        /* Sekcja Kont */
+        .accounts-panel { max-width: 1100px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+        .accounts-panel h2 { font-size: 16px; margin-top: 0; color: var(--text-muted); text-transform: uppercase; }
+        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-        .full-width { grid-column: 1 / -1; }
-        
-        label { font-size: 11px; font-weight: bold; color: #7f9799; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 15px;
-            outline: none;
-            background: white;
-        }
-        input:focus, select:focus { border-color: var(--olx-bg); }
-        
-        .price-range { display: flex; gap: 8px; }
-        
-        button.btn-search {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--olx-mint);
-            color: var(--olx-bg);
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+        .account-card { background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; display: flex; align-items: center; justify-content: space-between; }
+        .btn-connect { background: #238636; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; }
+        .btn-connected { background: #1f6feb; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 15px 40px 15px; }
-        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 15px; }
+        /* Sekcja Gier */
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-title { font-size: 20px; color: var(--accent); margin: 30px 0 15px 0; display: flex; align-items: center; gap: 8px; }
         
-        .card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            display: flex;
-            flex-direction: column;
-        }
-        .card-img { width: 100%; height: 170px; object-fit: cover; background: #eaeded; }
-        .card-content { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 14px; font-weight: 600; line-height: 1.3; height: 36px; overflow: hidden; margin: 0 0 8px 0; color: var(--olx-bg); }
-        .card-price { font-size: 18px; font-weight: bold; color: var(--olx-bg); margin-bottom: 6px; }
-        .card-footer { margin-top: auto; font-size: 11px; color: #7f9799; padding-bottom: 10px; }
-        
-        .btn-link {
-            display: block;
-            text-align: center;
-            background-color: var(--olx-bg);
-            color: white;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 13px;
-        }
+        .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #30363d; display: flex; flex-direction: column; position: relative; }
+        .card-img { width: 100%; height: 130px; object-fit: cover; }
+        .badge-free { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 14px; font-weight: bold; margin: 0 0 6px 0; }
+        .card-price { font-size: 18px; font-weight: bold; color: var(--accent); margin-bottom: 8px; }
+        .btn-claim { background: var(--accent); color: black; border: none; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; text-decoration: none; font-size: 13px; margin-top: auto; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🎯 Wyszukiwarka Okazji OLX</h1>
-    </header>
+    <div class="header">
+        <h1>🎮 Game Claimer & Okazje</h1>
+        <div>Status Auto-Bota: <span style="color:var(--accent); font-weight:bold;">AKTYWNY 🟢</span></div>
+    </div>
 
-    <div class="search-box">
-        <form action="/search" method="POST">
-            <div class="form-grid">
-                
-                <div class="full-width">
-                    <label>Co chcesz znaleźć?</label>
-                    <input type="text" name="query" value="{{ query if query else '' }}" placeholder="np. iPhone 13, Rower, PS5..." required>
-                </div>
-
-                <div>
-                    <label>Kategoria</label>
-                    <select name="category_slug">
-                        {% for cat_slug, cat_name in categories.items() %}
-                            <option value="{{ cat_slug }}" {% if category_slug == cat_slug %}selected{% endif %}>{{ cat_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div>
-                    <label>Miejscowość (Opcjonalnie)</label>
-                    <input type="text" name="city_name" value="{{ city_name if city_name else '' }}" placeholder="np. Krakow, Warszawa">
-                </div>
-
-                <div class="full-width">
-                    <label>Maksymalny Budżet (zł)</label>
-                    <input type="number" name="price_to" value="{{ price_to if price_to else '' }}" placeholder="np. 800">
-                </div>
-
+    <!-- Panel Połączonych Kont -->
+    <div class="accounts-panel">
+        <h2>Twoje Połączone Konta (Auto-Przypisywanie)</h2>
+        <div class="accounts-grid">
+            <div class="account-card">
+                <span>Steam</span>
+                <a href="/login/steam" class="btn-connect">Połącz</a>
             </div>
-
-            <button type="submit" class="btn-search">Szukaj na OLX</button>
-        </form>
+            <div class="account-card">
+                <span>Epic Games</span>
+                <a href="/login/epic" class="btn-connect">Połącz</a>
+            </div>
+            <div class="account-card">
+                <span>Xbox</span>
+                <a href="#" class="btn-connect">Połącz</a>
+            </div>
+            <div class="account-card">
+                <span>PlayStation</span>
+                <a href="#" class="btn-connect">Połącz</a>
+            </div>
+        </div>
     </div>
 
     <div class="container">
-        {% if offers is defined %}
-            <h2 style="font-size: 18px;">Znalezione ogłoszenia ({{ offers|length }})</h2>
-
-            {% if offers %}
-                <div class="results-grid">
-                    {% for item in offers %}
-                    <div class="card">
-                        <img src="{{ item.photo }}" class="card-img" alt="{{ item.title }}">
-                        <div class="card-content">
-                            <h3 class="card-title">{{ item.title }}</h3>
-                            <div class="card-price">{{ item.price }}</div>
-                            <div class="card-footer">📍 {{ item.location }}</div>
-                            <a href="{{ item.url }}" target="_blank" class="btn-link">Zobacz ogłoszenie ↗</a>
-                        </div>
-                    </div>
-                    {% endfor %}
+        <!-- Sekcja Darmowe Gry -->
+        <div class="section-title">🎁 Aktualne Darmowe Gry do Odebrania (100% OFF)</div>
+        <div class="deals-grid">
+            {% for game in freebies %}
+            <div class="card">
+                <span class="badge-free">DARMOWA</span>
+                <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
+                <div class="card-body">
+                    <div class="card-title">{{ game.title }}</div>
+                    <div class="card-price">0.00 zł</div>
+                    <a href="{{ game.url }}" target="_blank" class="btn-claim">Odebrana automatycznie ➔</a>
                 </div>
-            {% else %}
-                <p style="text-align:center; padding: 30px; color: #7f9799; font-size: 15px;">
-                    Nie znaleziono ogłoszeń dla podanych kryteriów. Spróbuj zwiększyć kwotę w polu budżetu lub usunąć miasto.
-                </p>
-            {% endif %}
-        {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sekcja Top Przeceny -->
+        <div class="section-title">🔥 Top 10 Największych Promocji Dzisiaj</div>
+        <div class="deals-grid">
+            {% for game in top_deals %}
+            <div class="card">
+                <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
+                <div class="card-body">
+                    <div class="card-title">{{ game.title }}</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Sklep: {{ game.store }}</div>
+                    <div class="card-price" style="margin-top:6px;">{{ game.price }}$ <span style="font-size:12px; color:var(--text-muted); text-decoration:line-through;">{{ game.old_price }}$</span></div>
+                    <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#21262d; color:white;">Zobacz ofertę ↗</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
 </body>
