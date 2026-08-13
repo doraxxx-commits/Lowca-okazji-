@@ -3,87 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Łowca Okazji OLX</title>
+    <title>Wyszukiwarka OLX</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #23e5db;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
+            --olx-bg: #002f34;
+            --olx-mint: #23e5db;
+            --olx-dark: #001417;
+            --card-bg: #ffffff;
+            --text-dark: #002f34;
+            --gray-bg: #f2f4f5;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 16px;
-        }
-        .container {
-            max-width: 500px;
-            margin: 0 auto 24px auto;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        h1 { font-size: 20px; margin-top: 0; color: var(--accent-color); text-align: center; }
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-muted); text-transform: uppercase; }
-        input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 15px; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #23e5db 0%, #0084ff 100%); color: #0f172a; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        * { box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background-color: var(--gray-bg); margin: 0; padding: 0; color: var(--text-dark); }
         
-        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; }
-        .card-img-container { width: 100%; height: 220px; overflow: hidden; background: #0f172a; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; }
-        .card-body { padding: 14px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 15px; font-weight: bold; margin: 0 0 6px 0; color: #fff; line-height: 1.3; }
-        .card-price { font-size: 20px; font-weight: 800; color: var(--accent-color); margin-bottom: 8px; }
-        .card-location { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
-        .card-btn { display: block; text-align: center; background: #23e5db; color: #0f172a; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; margin-top: auto; }
+        header { background-color: var(--olx-bg); padding: 20px 15px; color: white; text-align: center; }
+        header h1 { margin: 0 0 15px 0; font-size: 24px; color: var(--olx-mint); }
+        
+        .search-box {
+            max-width: 1000px;
+            margin: -20px auto 25px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .full-width { grid-column: 1 / -1; }
+        
+        label { font-size: 12px; font-weight: bold; color: #7f9799; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+        input:focus, select:focus { border-color: var(--olx-bg); }
+        
+        /* Auto-suggest miast */
+        .city-wrapper { position: relative; }
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 0 0 8px 8px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .suggestion-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; }
+        .suggestion-item:hover { background-color: var(--olx-mint); color: var(--olx-bg); font-weight: bold; }
+        
+        .row-2 { display: flex; gap: 8px; }
+        
+        button.btn-search {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--olx-mint);
+            color: var(--olx-bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        button.btn-search:hover { background-color: #1bc8bf; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px 40px 15px; }
+        
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-3px); }
+        .card-img { width: 100%; height: 180px; object-fit: cover; background: #eaeded; }
+        .card-content { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 14px; font-weight: 600; line-height: 1.3; height: 36px; overflow: hidden; margin: 0 0 8px 0; color: var(--olx-bg); }
+        .card-price { font-size: 18px; font-weight: bold; color: var(--olx-bg); margin-bottom: 6px; }
+        .card-footer { margin-top: auto; font-size: 11px; color: #7f9799; display: flex; justify-content: space-between; }
+        
+        .btn-link {
+            display: block;
+            text-align: center;
+            background-color: var(--olx-bg);
+            color: white;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🎯 Łowca Okazji OLX</h1>
-        <form action="/add" method="POST">
-            <div class="form-group">
-                <label>Szukana okazja</label>
-                <input type="text" name="query" value="{{ query if query else '' }}" placeholder="np. iPhone 11" required>
+    <header>
+        <h1>OLX - Wyszukiwarka Okazji</h1>
+    </header>
+
+    <div class="search-box">
+        <form action="/search" method="POST" id="searchForm">
+            <div class="form-grid">
+                
+                <!-- Czego szukasz -->
+                <div class="full-width">
+                    <label>Co chcesz znaleźć?</label>
+                    <input type="text" name="query" value="{{ query if query else '' }}" placeholder="np. iPhone 13, Rower, Sofa..." required>
+                </div>
+
+                <!-- Kategoria -->
+                <div>
+                    <label>Kategoria</label>
+                    <select name="category_id">
+                        {% for cat_id, cat_name in categories.items() %}
+                            <option value="{{ cat_id }}" {% if category_id == cat_id %}selected{% endif %}>{{ cat_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Miejscowość i podpowiedzi -->
+                <div class="city-wrapper">
+                    <label>Miejscowość</label>
+                    <input type="text" id="cityInput" name="city_name" value="{{ city_name if city_name else '' }}" placeholder="Wpisz miasto..." autocomplete="off">
+                    <input type="hidden" id="cityId" name="city_id" value="{{ city_id if city_id else '' }}">
+                    <div id="citySuggestions" class="suggestions" style="display:none;"></div>
+                </div>
+
+                <!-- Dystans -->
+                <div>
+                    <label>Odległość</label>
+                    <select name="distance">
+                        <option value="0" {% if distance == '0' %}selected{% endif %}>+ 0 km</option>
+                        <option value="10" {% if distance == '10' %}selected{% endif %}>+ 10 km</option>
+                        <option value="30" {% if distance == '30' %}selected{% endif %}>+ 30 km</option>
+                        <option value="50" {% if distance == '50' %}selected{% endif %}>+ 50 km</option>
+                        <option value="100" {% if distance == '100' %}selected{% endif %}>+ 100 km</option>
+                    </select>
+                </div>
+
+                <!-- Zakres Ceny -->
+                <div>
+                    <label>Cena (zł)</label>
+                    <div class="row-2">
+                        <input type="number" name="price_from" value="{{ price_from if price_from else '' }}" placeholder="od">
+                        <input type="number" name="price_to" value="{{ price_to if price_to else '' }}" placeholder="do">
+                    </div>
+                </div>
+
+                <!-- Sortowanie -->
+                <div>
+                    <label>Sortuj według</label>
+                    <select name="sort_by">
+                        <option value="created_at:desc" {% if sort_by == 'created_at:desc' %}selected{% endif %}>Najnowsze</option>
+                        <option value="price:asc" {% if sort_by == 'price:asc' %}selected{% endif %}>Najtańsze</option>
+                        <option value="price:desc" {% if sort_by == 'price:desc' %}selected{% endif %}>Najdroższe</option>
+                    </select>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label>Maksymalny budżet (PLN)</label>
-                <input type="number" name="price" value="{{ max_price if max_price else '' }}" placeholder="np. 600" required>
-            </div>
-            <button type="submit">Szukaj okazji na OLX</button>
+
+            <button type="submit" class="btn-search">Szukaj na OLX</button>
         </form>
     </div>
 
-    {% if offers is defined %}
-        {% if offers %}
-            <h2 style="text-align:center; color: var(--accent-color);">Znaleziono {{ offers|length }} okazji na OLX!</h2>
-            <div class="results-grid">
-                {% for item in offers %}
-                <div class="card">
-                    <div class="card-img-container">
-                        <img src="{{ item.photo }}" class="card-img" alt="{{ item.title }}">
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">{{ item.title }}</h3>
-                        <div class="card-price">{{ item.price }} PLN</div>
-                        <div class="card-location">📍 {{ item.location }}</div>
-                        <a href="{{ item.url }}" target="_blank" class="card-btn">Otwórz w OLX ↗</a>
-                    </div>
-                </div>
-                {% endfor %}
+    <div class="container">
+        {% if offers is defined %}
+            <div class="results-header">
+                <h2>Znalezione ogłoszenia ({{ offers|length }})</h2>
             </div>
-        {% else %}
-            <p style="text-align:center; color: #ef4444; font-size:15px;">Brak ofert na OLX dla "{{ query }}" do {{ max_price }} PLN.</p>
-        {% endif %}
-    {% endif %}
 
+            {% if offers %}
+                <div class="results-grid">
+                    {% for item in offers %}
+                    <div class="card">
+                        <img src="{{ item.photo }}" class="card-img" alt="{{ item.title }}">
+                        <div class="card-content">
+                            <h3 class="card-title">{{ item.title }}</h3>
+                            <div class="card-price">{{ item.price }}</div>
+                            <div class="card-footer">
+                                <span>📍 {{ item.location }}</span>
+                                <span>📅 {{ item.date }}</span>
+                            </div>
+                            <a href="{{ item.url }}" target="_blank" class="btn-link">Zobacz ogłoszenie ↗</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="text-align:center; padding: 40px; color: #7f9799; font-size: 16px;">
+                    Nie znaleziono ogłoszeń spełniających te kryteria. Spróbuj zwiększyć promień lub zmienić cenę.
+                </p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <script>
+        // Dynamiczne podpowiedzi miast
+        const cityInput = document.getElementById('cityInput');
+        const cityId = document.getElementById('cityId');
+        const suggestionsBox = document.getElementById('citySuggestions');
+
+        cityInput.addEventListener('input', async function() {
+            const query = this.value.trim();
+            cityId.value = ''; // czyszczenie ID przy nowym wpisywaniu
+            
+            if (query.length < 2) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/cities?q=${encodeURIComponent(query)}`);
+                const cities = await response.json();
+
+                if (cities.length > 0) {
+                    suggestionsBox.innerHTML = '';
+                    cities.forEach(city => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.textContent = city.label;
+                        div.onclick = function() {
+                            cityInput.value = city.name;
+                            cityId.value = city.id;
+                            suggestionsBox.style.display = 'none';
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.style.display = 'block';
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!cityInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
