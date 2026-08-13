@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: football-player-simulator
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn football_engine:app
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.13.5
