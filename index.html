@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polski Piłkarz Simulator</title>
+    <title>Polski Piłkarz Simulator PRO</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 20px; color: #222; }
-        .container { max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.12); overflow: hidden; }
-        .header { background: #1b4332; color: white; padding: 25px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
+        .container { max-width: 700px; margin: 0 auto; background: #1e1e1e; border-radius: 12px; border: 1px solid #333; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .header { background: #1b4332; color: white; padding: 20px; text-align: center; border-bottom: 2px solid #2d6a4f; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
         .content { padding: 20px; }
-        .card { border: 1px solid #dcdcdc; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #fdfdfd; }
-        .card.offer { border-left: 5px solid #2d6a4f; background: #f0fdf4; }
-        button { background: #2d6a4f; color: white; border: none; padding: 12px 18px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; margin-top: 8px; font-weight: 700; transition: background 0.2s; }
-        button:hover { background: #1b4332; }
-        button.alt { background: #4a5568; }
-        button.alt:hover { background: #2d3748; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: #f7fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .stats-grid div { font-size: 14px; }
-        select, input { width: 100%; padding: 10px; margin: 6px 0 16px; border-radius: 6px; border: 1px solid #cbd5e0; box-sizing: border-box; }
+        .card { border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #252525; }
+        .card.offer { border-left: 5px solid #2d6a4f; background: #1b2e24; }
+        button { background: #2d6a4f; color: white; border: none; padding: 12px 18px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; margin-top: 8px; font-weight: 700; transition: 0.2s; }
+        button:hover { background: #40916c; }
+        button.alt { background: #3a3a3a; }
+        button.alt:hover { background: #555; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: #2a2a2a; padding: 12px; border-radius: 8px; font-size: 13px; }
+        select, input { width: 100%; padding: 10px; margin: 6px 0 16px; border-radius: 6px; border: 1px solid #444; background: #121212; color: white; box-sizing: border-box; }
         .hidden { display: none; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; background: #2b6cb0; margin-left: 5px; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; background: #2b6cb0; }
+        .season-stats { background: #181818; padding: 10px; border-radius: 6px; margin-top: 10px; border: 1px solid #282828; }
     </style>
 </head>
 <body>
@@ -37,6 +37,9 @@
             <label>Imię i Nazwisko:</label>
             <input type="text" id="input-name" value="Zbigniew Mandziejewicz">
             
+            <label>Rok Urodzenia (Aktualny rok: 2026):</label>
+            <input type="number" id="input-birthyear" value="2008" min="1980" max="2012">
+
             <label>Pozycja:</label>
             <select id="input-position">
                 <option value="Napastnik">Napastnik</option>
@@ -45,19 +48,12 @@
                 <option value="Bramkarz">Bramkarz</option>
             </select>
 
-            <label>Lepsza noga:</label>
-            <select id="input-foot">
-                <option value="Prawa">Prawa</option>
-                <option value="Lewa">Lewa</option>
-                <option value="Obunożny">Obunożny</option>
-            </select>
-
             <label>Punkt startowy (Poziom umiejętności):</label>
             <select id="input-start-ovr">
-                <option value="35">B-klasowy wyjadacz (35 OVR)</option>
-                <option value="45" selected>Normalny chłop (45 OVR)</option>
+                <option value="40">B-klasowy wyjadacz (40 OVR)</option>
+                <option value="48" selected>Normalny chłop (48 OVR)</option>
                 <option value="55">Puchar Syrenki (55 OVR)</option>
-                <option value="65">Wonderkid (65 OVR)</option>
+                <option value="63">Wonderkid (63 OVR)</option>
             </select>
 
             <button onclick="startGame()">Rozpocznij Karierę</button>
@@ -68,18 +64,24 @@
         <div id="screen-game" class="hidden">
             <div class="stats-grid">
                 <div><strong>Zawodnik:</strong> <span id="stat-name"></span></div>
-                <div><strong>Wiek:</strong> <span id="stat-age">16</span> lat</div>
+                <div><strong>Rok urodzenia:</strong> <span id="stat-birth"></span> (<span id="stat-age"></span> lat)</div>
                 <div><strong>Klub:</strong> <span id="stat-club">Bez klubu</span></div>
                 <div><strong>Liga:</strong> <span id="stat-league">-</span></div>
-                <div><strong>Umiejętności (OVR):</strong> <span id="stat-ovr">45</span></div>
-                <div><strong>Forma:</strong> <span id="stat-form">50</span>/100</div>
-                <div><strong>Konto:</strong> <span id="stat-money">0</span> PLN</div>
-                <div><strong>Morale / Życie:</strong> <span id="stat-lifestyle">50</span>/100</div>
+                <div><strong>Umiejętności (OVR):</strong> <span id="stat-ovr"></span></div>
+                <div><strong>Forma:</strong> <span id="stat-form"></span>/100</div>
+                <div><strong>Konto:</strong> <span id="stat-money"></span> PLN</div>
+                <div><strong>Sezon:</strong> <span id="stat-year">2026</span></div>
             </div>
 
+            <div class="season-stats">
+                <strong>Statystyki Obecnego Sezonu:</strong><br>
+                Mecze: <span id="stat-matches">0</span> | Minuty: <span id="stat-mins">0</span>' | Bramki: <span id="stat-goals">0</span> | Asysty: <span id="stat-assists">0</span>
+            </div>
+            <br>
+
             <div id="event-box" class="card">
-                <h4 id="event-title">Witaj w grze!</h4>
-                <p id="event-desc">Szukamy dla Ciebie pierwszego klubu...</p>
+                <h4 id="event-title">---</h4>
+                <p id="event-desc">---</p>
                 <div id="event-actions"></div>
             </div>
 
@@ -89,88 +91,55 @@
 </div>
 
 <script>
-// BAZA DANYCH 54 KLUBÓW (EKSTRAKLASA, 1 LIGA, 2 LIGA)
+const CURRENT_SIM_YEAR = 2026;
+
 const CLUBS_DATABASE = {
     "Ekstraklasa": [
-        { name: "Legia Warszawa", minOvr: 76, wage: 65000 },
-        { name: "Lech Poznań", minOvr: 75, wage: 60000 },
-        { name: "Raków Częstochowa", minOvr: 74, wage: 55000 },
-        { name: "Jagiellonia Białystok", minOvr: 73, wage: 50000 },
-        { name: "Pogoń Szczecin", minOvr: 72, wage: 45000 },
-        { name: "Górnik Zabrze", minOvr: 71, wage: 38000 },
-        { name: "Widzew Łódź", minOvr: 70, wage: 35000 },
-        { name: "Cracovia", minOvr: 69, wage: 32000 },
-        { name: "GKS Katowice", minOvr: 68, wage: 28000 },
-        { name: "Piast Gliwice", minOvr: 68, wage: 27000 },
-        { name: "Zagłębie Lubin", minOvr: 67, wage: 26000 },
-        { name: "Motor Lublin", minOvr: 66, wage: 24000 },
-        { name: "Radomiak Radom", minOvr: 66, wage: 23000 },
-        { name: "Korona Kielce", minOvr: 65, wage: 21000 },
-        { name: "Lechia Gdańsk", minOvr: 65, wage: 20000 },
-        { name: "Wisła Płock", minOvr: 64, wage: 19000 },
-        { name: "Arka Gdynia", minOvr: 64, wage: 18000 },
-        { name: "Bruk-Bet Termalica", minOvr: 63, wage: 17000 }
+        { name: "Legia Warszawa", minOvr: 76, wage: 65000 }, { name: "Lech Poznań", minOvr: 75, wage: 60000 },
+        { name: "Raków Częstochowa", minOvr: 74, wage: 55000 }, { name: "Jagiellonia Białystok", minOvr: 73, wage: 50000 },
+        { name: "Pogoń Szczecin", minOvr: 72, wage: 45000 }, { name: "Górnik Zabrze", minOvr: 71, wage: 38000 },
+        { name: "Widzew Łódź", minOvr: 70, wage: 35000 }, { name: "Cracovia", minOvr: 69, wage: 32000 },
+        { name: "GKS Katowice", minOvr: 68, wage: 28000 }, { name: "Piast Gliwice", minOvr: 68, wage: 27000 },
+        { name: "Zagłębie Lubin", minOvr: 67, wage: 26000 }, { name: "Motor Lublin", minOvr: 66, wage: 24000 },
+        { name: "Radomiak Radom", minOvr: 66, wage: 23000 }, { name: "Korona Kielce", minOvr: 65, wage: 21000 },
+        { name: "Lechia Gdańsk", minOvr: 65, wage: 20000 }, { name: "Wisła Płock", minOvr: 64, wage: 19000 },
+        { name: "Arka Gdynia", minOvr: 64, wage: 18000 }, { name: "Bruk-Bet Termalica", minOvr: 63, wage: 17000 }
     ],
     "1 Liga": [
-        { name: "Wisła Kraków", minOvr: 63, wage: 22000 },
-        { name: "Śląsk Wrocław", minOvr: 62, wage: 19000 },
-        { name: "Ruch Chorzów", minOvr: 61, wage: 16000 },
-        { name: "Miedź Legnica", minOvr: 60, wage: 14000 },
-        { name: "Wieczysta Kraków", minOvr: 60, wage: 18000 },
-        { name: "ŁKS Łódź", minOvr: 59, wage: 13000 },
-        { name: "Stal Mielec", minOvr: 59, wage: 12000 },
-        { name: "Polonia Warszawa", minOvr: 58, wage: 11000 },
-        { name: "Puszcza Niepołomice", minOvr: 58, wage: 10500 },
-        { name: "Odra Opole", minOvr: 57, wage: 9500 },
-        { name: "Chrobry Głogów", minOvr: 56, wage: 9000 },
-        { name: "Stal Rzeszów", minOvr: 56, wage: 8500 },
-        { name: "Pogoń Grodzisk Mazowiecki", minOvr: 55, wage: 8000 },
-        { name: "Polonia Bytom", minOvr: 55, wage: 7800 },
-        { name: "Warta Poznań", minOvr: 54, wage: 7500 },
-        { name: "Pogoń Siedlce", minOvr: 53, wage: 7000 },
-        { name: "Znicz Pruszków", minOvr: 53, wage: 6800 },
-        { name: "Unia Skierniewice", minOvr: 52, wage: 6500 }
+        { name: "Wisła Kraków", minOvr: 63, wage: 22000 }, { name: "Śląsk Wrocław", minOvr: 62, wage: 19000 },
+        { name: "Ruch Chorzów", minOvr: 61, wage: 16000 }, { name: "Miedź Legnica", minOvr: 60, wage: 14000 },
+        { name: "Wieczysta Kraków", minOvr: 60, wage: 18000 }, { name: "ŁKS Łódź", minOvr: 59, wage: 13000 },
+        { name: "Stal Mielec", minOvr: 59, wage: 12000 }, { name: "Polonia Warszawa", minOvr: 58, wage: 11000 },
+        { name: "Puszcza Niepołomice", minOvr: 58, wage: 10500 }, { name: "Odra Opole", minOvr: 57, wage: 9500 },
+        { name: "Chrobry Głogów", minOvr: 56, wage: 9000 }, { name: "Stal Rzeszów", minOvr: 56, wage: 8500 },
+        { name: "Pogoń Grodzisk Maz.", minOvr: 55, wage: 8000 }, { name: "Polonia Bytom", minOvr: 55, wage: 7800 },
+        { name: "Warta Poznań", minOvr: 54, wage: 7500 }, { name: "Pogoń Siedlce", minOvr: 53, wage: 7000 },
+        { name: "Znicz Pruszków", minOvr: 53, wage: 6800 }, { name: "Unia Skierniewice", minOvr: 52, wage: 6500 }
     ],
     "2 Liga": [
-        { name: "Avia Świdnik", minOvr: 52, wage: 6000 },
-        { name: "GKS Tychy", minOvr: 52, wage: 6200 },
-        { name: "Podbeskidzie Bielsko-Biała", minOvr: 51, wage: 5800 },
-        { name: "Hutnik Kraków", minOvr: 50, wage: 5200 },
-        { name: "Resovia Rzeszów", minOvr: 50, wage: 5000 },
-        { name: "Zawisza Bydgoszcz", minOvr: 49, wage: 4600 },
-        { name: "Chojniczanka Chojnice", minOvr: 48, wage: 4300 },
-        { name: "Górnik Łęczna", minOvr: 48, wage: 4200 },
-        { name: "Stal Stalowa Wola", minOvr: 47, wage: 3900 },
-        { name: "Sandecja Nowy Sącz", minOvr: 46, wage: 3600 },
-        { name: "Lechia Zielona Góra", minOvr: 45, wage: 3400 },
-        { name: "Olimpia Grudziądz", minOvr: 44, wage: 3100 },
-        { name: "Rekord Bielsko-Biała", minOvr: 43, wage: 2900 },
-        { name: "NKP Podhale Nowy Targ", minOvr: 42, wage: 2700 },
-        { name: "Świt Szczecin", minOvr: 41, wage: 2500 },
-        { name: "Sokół Kleczew", minOvr: 40, wage: 2200 },
-        { name: "Śląsk II Wrocław", minOvr: 38, wage: 1900 },
-        { name: "Legia II Warszawa", minOvr: 35, wage: 1600 }
+        { name: "Avia Świdnik", minOvr: 52, wage: 6000 }, { name: "GKS Tychy", minOvr: 52, wage: 6200 },
+        { name: "Podbeskidzie", minOvr: 51, wage: 5800 }, { name: "Hutnik Kraków", minOvr: 50, wage: 5200 },
+        { name: "Resovia Rzeszów", minOvr: 50, wage: 5000 }, { name: "Zawisza Bydgoszcz", minOvr: 49, wage: 4600 },
+        { name: "Chojniczanka", minOvr: 48, wage: 4300 }, { name: "Górnik Łęczna", minOvr: 48, wage: 4200 },
+        { name: "Stal Stalowa Wola", minOvr: 47, wage: 3900 }, { name: "Sandecja Nowy Sącz", minOvr: 46, wage: 3600 },
+        { name: "Lechia Zielona Góra", minOvr: 45, wage: 3400 }, { name: "Olimpia Grudziądz", minOvr: 44, wage: 3100 },
+        { name: "Rekord Bielsko-Biała", minOvr: 43, wage: 2900 }, { name: "Podhale Nowy Targ", minOvr: 42, wage: 2700 },
+        { name: "Świt Szczecin", minOvr: 41, wage: 2500 }, { name: "Sokół Kleczew", minOvr: 40, wage: 2200 },
+        { name: "Śląsk II Wrocław", minOvr: 38, wage: 1900 }, { name: "Legia II Warszawa", minOvr: 35, wage: 1600 }
     ]
 };
 
-// STRUKTURA GRACZA
 let player = {
-    name: "",
-    position: "",
-    foot: "",
-    age: 16,
-    ovr: 45,
-    form: 50,
-    money: 0,
-    lifestyle: 50,
-    club: null,
-    league: null
+    name: "", birthYear: 2008, age: 18, position: "", ovr: 48, form: 60, money: 0,
+    currentYear: CURRENT_SIM_YEAR, decisionCount: 0, club: null, league: null,
+    stats: { matches: 0, mins: 0, goals: 0, assists: 0 }
 };
 
 function startGame() {
-    player.name = document.getElementById("input-name").value || "Jan Kowalski";
+    player.name = document.getElementById("input-name").value || "Zawodnik";
+    player.birthYear = parseInt(document.getElementById("input-birthyear").value);
+    player.age = player.currentYear - player.birthYear;
     player.position = document.getElementById("input-position").value;
-    player.foot = document.getElementById("input-foot").value;
     player.ovr = parseInt(document.getElementById("input-start-ovr").value);
 
     document.getElementById("screen-creation").classList.add("hidden");
@@ -182,51 +151,60 @@ function startGame() {
 
 function updateUI() {
     document.getElementById("stat-name").innerText = `${player.name} (${player.position})`;
-    document.getElementById("stat-age").innerText = player.age.toFixed(1);
+    document.getElementById("stat-birth").innerText = player.birthYear;
+    document.getElementById("stat-age").innerText = player.currentYear - player.birthYear;
     document.getElementById("stat-club").innerText = player.club ? player.club.name : "Bez klubu";
     document.getElementById("stat-league").innerText = player.league || "-";
     document.getElementById("stat-ovr").innerText = player.ovr;
     document.getElementById("stat-form").innerText = player.form;
     document.getElementById("stat-money").innerText = player.money.toLocaleString();
-    document.getElementById("stat-lifestyle").innerText = player.lifestyle;
+    document.getElementById("stat-year").innerText = player.currentYear;
+
+    document.getElementById("stat-matches").innerText = player.stats.matches;
+    document.getElementById("stat-mins").innerText = player.stats.mins;
+    document.getElementById("stat-goals").innerText = player.stats.goals;
+    document.getElementById("stat-assists").innerText = player.stats.assists;
 }
 
-// GENEROWANIE OFERT
-function generateClubOffers() {
+function generateClubOffers(isEndSeason = false) {
     const actionsBox = document.getElementById("event-actions");
     actionsBox.innerHTML = "";
-    document.getElementById("event-title").innerText = "Oferty Kontraktów";
-    document.getElementById("event-desc").innerText = "Kluby zainteresowane Twoimi usługami:";
+    document.getElementById("event-title").innerText = isEndSeason ? "Koniec Sezonu - Okno Transferowe" : "Wybór Klubu";
+    document.getElementById("event-desc").innerText = "Otrzymałeś następujące oferty kontraktów:";
 
-    let eligibleOffers = [];
+    let offers = [];
 
-    // Sprawdzenie dostępnych lig na podstawie OVR zawodnika
-    Object.keys(CLUBS_DATABASE).forEach(leagueName => {
-        CLUBS_DATABASE[leagueName].forEach(club => {
-            if (player.ovr >= club.minOvr - 3 && player.ovr <= club.minOvr + 8) {
-                eligibleOffers.push({ club: club, league: leagueName });
+    // Możliwość pozostania w obecnym klubie jeśli sezon był udany
+    if (isEndSeason && player.club && player.form >= 45) {
+        let newWage = Math.round(player.club.wage * (player.form > 70 ? 1.25 : 1.0));
+        const keepCard = document.createElement("div");
+        keepCard.className = "card offer";
+        keepCard.innerHTML = `
+            <strong>PRZEDŁUŻENIE: ${player.club.name}</strong> <span class="badge">${player.league}</span><br>
+            Klub oferuje Ci nową umowę: <b>${newWage.toLocaleString()} PLN / mies.</b><br>
+            <button onclick="signContract('${player.club.name}', '${player.league}', ${newWage})">Zostań w klubie</button>
+        `;
+        actionsBox.appendChild(keepCard);
+    }
+
+    // Wyznaczenie ofert na podstawie OVR i Formy z ostatniego sezonu
+    let effectiveOvr = player.ovr + (player.form > 65 ? 4 : (player.form < 40 ? -5 : 0));
+
+    Object.keys(CLUBS_DATABASE).forEach(lName => {
+        CLUBS_DATABASE[lName].forEach(club => {
+            if (effectiveOvr >= club.minOvr - 3 && effectiveOvr <= club.minOvr + 6) {
+                offers.push({ club: club, league: lName });
             }
         });
     });
 
-    // Losowanie maksymalnie 4 ofert
-    eligibleOffers.sort(() => 0.5 - Math.random());
-    let selectedOffers = eligibleOffers.slice(0, 4);
-
-    if (selectedOffers.length === 0) {
-        // Oferta ratunkowa jeśli OVR jest bardzo niski
-        selectedOffers.push({ 
-            club: CLUBS_DATABASE["2 Liga"][CLUBS_DATABASE["2 Liga"].length - 1], 
-            league: "2 Liga" 
-        });
-    }
-
-    selectedOffers.forEach(o => {
+    offers.sort(() => 0.5 - Math.random());
+    offers.slice(0, 3).forEach(o => {
         const card = document.createElement("div");
         card.className = "card offer";
         card.innerHTML = `
             <strong>${o.club.name}</strong> <span class="badge">${o.league}</span><br>
-            Szacowany kontrakt: <b>${o.club.wage.toLocaleString()} PLN / mies.</b><br>
+            Kontrakt: <b>${o.club.wage.toLocaleString()} PLN / mies.</b><br>
             <button onclick="signContract('${o.club.name}', '${o.league}', ${o.club.wage})">Podpisz Kontrakt</button>
         `;
         actionsBox.appendChild(card);
@@ -236,81 +214,100 @@ function generateClubOffers() {
 function signContract(clubName, league, wage) {
     player.club = { name: clubName, wage: wage };
     player.league = league;
+    player.decisionCount = 0;
     updateUI();
-    nextLifeTurn();
+    nextSeasonEvent();
 }
 
-// DECYZJE ŽYCIOWE I TRENINGOWE
-function nextLifeTurn() {
+function nextSeasonEvent() {
     updateUI();
     const actionsBox = document.getElementById("event-actions");
     actionsBox.innerHTML = "";
 
-    document.getElementById("event-title").innerText = `Kolejka w ${player.club.name}`;
-    document.getElementById("event-desc").innerText = "Wybierz, jak spędzasz czas przed meczem ligowym:";
+    if (player.decisionCount < 3) {
+        player.decisionCount++;
+        document.getElementById("event-title").innerText = `Sezon ${player.currentYear} - Decyzja ${player.decisionCount}/3`;
+        document.getElementById("event-desc").innerText = "Wybierz działanie wpływiące na Twoją formę oraz umiejętności:";
 
-    const choices = [
-        {
-            text: "Ciężki trening na boisku (+2 OVR, -10 Forma)",
-            action: () => { player.ovr += 2; player.form = Math.max(0, player.form - 10); advanceTurn(); }
-        },
-        {
-            text: "Odpoczynek i regeneracja (+15 Forma, -5 Morale)",
-            action: () => { player.form = Math.min(100, player.form + 15); player.lifestyle = Math.max(0, player.lifestyle - 5); advanceTurn(); }
-        },
-        {
-            text: "Nocna impreza na mieście (+20 Morale, -3 OVR, -25 Forma)",
-            action: () => { player.lifestyle = Math.min(100, player.lifestyle + 20); player.ovr = Math.max(1, player.ovr - 3); player.form = Math.max(0, player.form - 25); advanceTurn(); }
-        },
-        {
-            text: "Indywidualne zajęcia z trenerem (Koszt: 3000 PLN, +3 OVR)",
-            action: () => {
-                if (player.money >= 3000) {
-                    player.money -= 3000;
-                    player.ovr += 3;
-                    advanceTurn();
-                } else {
-                    alert("Nie masz wystarczająco dużo pieniędzy!");
-                }
-            }
-        }
-    ];
+        const options = [
+            { text: "Ciężki trening indywidualny (+2 OVR, -10 Forma)", act: () => { player.ovr += 2; player.form = Math.max(10, player.form - 10); simulateMidSeasonMatches(); } },
+            { text: "Regeneracja i praca z fizjoterapeutą (+15 Forma)", act: () => { player.form = Math.min(100, player.form + 15); simulateMidSeasonMatches(); } },
+            { text: "Impreza i integracja zespołu (+20 Forma, -1 OVR)", act: () => { player.form = Math.min(100, player.form + 20); player.ovr = Math.max(10, player.ovr - 1); simulateMidSeasonMatches(); } }
+        ];
 
-    choices.forEach(c => {
-        const btn = document.createElement("button");
-        btn.innerText = c.text;
-        btn.onclick = c.action;
-        actionsBox.appendChild(btn);
-    });
-}
-
-function advanceTurn() {
-    player.money += player.club.wage;
-    player.age += 0.1;
-    player.age = parseFloat(player.age.toFixed(1));
-
-    // Okresowe okno transferowe (co około 1 rok gry / 10 tur)
-    if (Math.random() > 0.75) {
-        generateClubOffers();
+        options.forEach(o => {
+            const btn = document.createElement("button");
+            btn.innerText = o.text;
+            btn.onclick = o.act;
+            actionsBox.appendChild(btn);
+        });
     } else {
-        nextLifeTurn();
+        simulateFullSeasonEnd();
     }
 }
 
-// SYSTEM ZAPISU I ODCZYTU (localStorage)
+function simulateMidSeasonMatches() {
+    // Rozgrywanie kilkunastu meczów w trakcie okresu
+    let played = Math.floor(Math.random() * 4) + 8;
+    for(let i = 0; i < played; i++) {
+        let mins = Math.min(90, Math.floor((player.ovr / 75) * 90) + Math.floor(Math.random() * 15));
+        player.stats.matches++;
+        player.stats.mins += mins;
+        
+        if (mins > 30) {
+            let scoreChance = (player.ovr + player.form) / (player.position === "Napastnik" ? 110 : 180);
+            if (Math.random() < scoreChance) player.stats.goals++;
+            if (Math.random() < (scoreChance * 0.8)) player.stats.assists++;
+        }
+    }
+    player.money += player.club.wage * 4; // Zarobki za okres
+    nextSeasonEvent();
+}
+
+function simulateFullSeasonEnd() {
+    const actionsBox = document.getElementById("event-actions");
+    actionsBox.innerHTML = "";
+
+    // Progres / Regres zawodnika na koniec roku
+    let ovrChange = 0;
+    if (player.form > 70) ovrChange = Math.floor(Math.random() * 3) + 1; // +1 do +3
+    else if (player.form < 40) ovrChange = -Math.floor(Math.random() * 2) - 1; // -1 do -2
+    else ovrChange = Math.random() > 0.5 ? 1 : 0;
+
+    player.ovr += ovrChange;
+    player.currentYear++;
+    player.age = player.currentYear - player.birthYear;
+
+    document.getElementById("event-title").innerText = `Podsumowanie Sezonu ${player.currentYear - 1}`;
+    document.getElementById("event-desc").innerText = 
+        `Sezon dobiegł końca! Rozegrałeś ${player.stats.matches} meczów (${player.stats.mins} min), zdobywając ${player.stats.goals} goli i ${player.stats.assists} asyst. ` +
+        `Zmiana umiejętności (OVR): ${ovrChange >= 0 ? '+' + ovrChange : ovrChange}. Twój aktualny OVR wynosi ${player.ovr}.`;
+
+    const btn = document.createElement("button");
+    btn.innerText = "Przejdź do Okna Transferowego";
+    btn.onclick = () => {
+        // Reset statystyk rocznych
+        player.stats = { matches: 0, mins: 0, goals: 0, assists: 0 };
+        player.form = 50; // Reset formy na nowy sezon
+        generateClubOffers(true);
+    };
+    actionsBox.appendChild(btn);
+    updateUI();
+}
+
 function saveGame() {
-    localStorage.setItem("polski_pilkarz_save", JSON.stringify(player));
-    alert("Kariera pomyślnie zapisana!");
+    localStorage.setItem("polski_pilkarz_pro_save", JSON.stringify(player));
+    alert("Kariera została pomyślnie zapisana!");
 }
 
 function loadGame() {
-    const data = localStorage.getItem("polski_pilkarz_save");
-    if (data) {
-        player = JSON.parse(data);
+    const saved = localStorage.getItem("polski_pilkarz_pro_save");
+    if (saved) {
+        player = JSON.parse(saved);
         document.getElementById("screen-creation").classList.add("hidden");
         document.getElementById("screen-game").classList.remove("hidden");
         updateUI();
-        nextLifeTurn();
+        nextSeasonEvent();
     } else {
         alert("Brak zapisanej gry w pamięci przeglądarki.");
     }
