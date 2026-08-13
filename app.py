@@ -1,65 +1,63 @@
 from flask import Flask, render_template, request
 import requests
-from bs4 import BeautifulSoup
-import re
 
 app = Flask(__name__, template_folder='.')
 
 def search_olx(query, max_price):
-    formatted_query = query.lower().strip().replace(' ', '-')
-    url = f"https://www.olx.pl/oferty/q-{formatted_query}/"
+    # Wykorzystujemy wewnętrzne API OLX zamiast wyciągania kodu HTML
+    url = f"https://www.olx.pl/api/v1/offers/?offset=0&limit=40&query={query}&filter_float_price:to={max_price}"
     
     headers = {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Mobile/15E148 Safari/604.1"
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15",
+        "Accept": "application/json"
     }
     
     try:
         response = requests.get(url, headers=headers, timeout=10)
+        
         if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            cards = soup.select('div[data-testid="l-card"]')
+            data = response.json()
+            items = data.get('data', [])
             
             results = []
-            for card in cards:
-                title_elem = card.select_one('h6')
-                price_elem = card.select_one('p[data-testid="ad-price"]')
-                link_elem = card.select_one('a')
-                img_elem = card.select_one('img')
-                location_elem = card.select_one('p[data-testid="location-date"]')
+            for item in items:
+                title = item.get('title', 'Brak tytułu')
+                item_url = item.get('url', '#')
                 
-                if title_elem and price_elem and link_elem:
-                    title = title_elem.text.strip()
-                    price_text = price_elem.text.strip()
-                    
-                    # Czyszczenie ceny do samej liczby
-                    price_digit = re.sub(r'[^\d]', '', price_text)
-                    if not price_digit:
-                        continue
-                    price = float(price_digit)
-                    
-                    # Filtrowanie tylko okazji poniżej maksymalnej ceny
-                    if price <= max_price:
-                        link = link_elem.get('href', '')
-                        if link.startswith('/'):
-                            link = f"https://www.olx.pl{link}"
-                            
-                        photo = img_elem.get('src', '') if img_elem else ''
-                        if not photo or 'data:image' in photo:
-                            photo = 'https://via.placeholder.com/300x400?text=OLX+Okazja'
-                            
-                        location = location_elem.text.strip() if location_elem else 'OLX Polska'
-                        
-                        results.append({
-                            'title': title,
-                            'price': price,
-                            'url': link,
-                            'photo': photo,
-                            'location': location
-                        })
+                # Wyciąganie ceny z parametrów
+                params = item.get('params', [])
+                price = 0
+                for p in params:
+                    if p.get('key') == 'price':
+                        value_data = p.get('value', {})
+                        price = value_data.get('value', 0)
+                        break
+                
+                # Wyciąganie zdjęcia
+                photos = item.get('photos', [])
+                photo_url = 'https://via.placeholder.com/300x400?text=OLX+Okazja'
+                if photos:
+                    photo_url = photos[0].get('link', '').replace('{width}', '600').replace('{height}', '400')
+                
+                # Lokalizacja
+                location_data = item.get('location', {})
+                city_data = location_data.get('city', {})
+                location = city_data.get('name', 'Polska')
+                
+                results.append({
+                    'title': title,
+                    'price': price,
+                    'url': item_url,
+                    'photo': photo_url,
+                    'location': location
+                })
             return results
-        return []
+        else:
+            print(f"Błąd API OLX: Status {response.status_code}")
+            return []
+            
     except Exception as e:
-        print(f"Błąd podczas pobierania OLX: {e}")
+        print(f"Błąd podczas połączenia z API OLX: {e}")
         return []
 
 @app.route('/')
