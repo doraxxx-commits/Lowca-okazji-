@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Łowca Okazji Vinted</title>
+    <title>Łowca Okazji OLX</title>
     <style>
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
-            --accent-color: #00d2ff;
+            --accent-color: #23e5db;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 16px;
         }
         .container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto 24px auto;
             background: var(--card-bg);
             padding: 20px;
@@ -28,170 +28,60 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.05);
         }
-        h1 {
-            font-size: 20px;
-            margin-top: 0;
-            color: var(--accent-color);
-        }
-        .form-group {
-            margin-bottom: 14px;
-        }
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            color: white;
-            font-size: 15px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Sekcja kafelków */
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .card {
-            background: var(--card-bg);
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            flex-direction: column;
-        }
-        .card-img-container {
-            width: 100%;
-            height: 280px;
-            overflow: hidden;
-            background: #0f172a;
-            position: relative;
-        }
-        .card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .card-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 210, 255, 0.9);
-            color: #000;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 13px;
-        }
-        .card-body {
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 6px 0;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .card-info {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-        .card-price {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--accent-color);
-            margin-bottom: 12px;
-        }
-        .card-btn {
-            display: block;
-            text-align: center;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            margin-top: auto;
-        }
+        h1 { font-size: 20px; margin-top: 0; color: var(--accent-color); text-align: center; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-muted); text-transform: uppercase; }
+        input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 15px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #23e5db 0%, #0084ff 100%); color: #0f172a; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; }
+        .card-img-container { width: 100%; height: 220px; overflow: hidden; background: #0f172a; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; }
+        .card-body { padding: 14px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 15px; font-weight: bold; margin: 0 0 6px 0; color: #fff; line-height: 1.3; }
+        .card-price { font-size: 20px; font-weight: 800; color: var(--accent-color); margin-bottom: 8px; }
+        .card-location { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+        .card-btn { display: block; text-align: center; background: #23e5db; color: #0f172a; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; margin-top: auto; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🔍 Szukaj ofert na Vinted</h1>
+        <h1>🎯 Łowca Okazji OLX</h1>
         <form action="/add" method="POST">
             <div class="form-group">
-                <label>Szukana fraza</label>
-                <input type="text" name="query" value="{{ query if query else '' }}" placeholder="np. Jordan 1" required>
+                <label>Szukana okazja</label>
+                <input type="text" name="query" value="{{ query if query else '' }}" placeholder="np. iPhone 11" required>
             </div>
             <div class="form-group">
-                <label>Maksymalna cena (PLN)</label>
-                <input type="number" name="price" value="{{ max_price if max_price else '' }}" placeholder="np. 150" required>
+                <label>Maksymalny budżet (PLN)</label>
+                <input type="number" name="price" value="{{ max_price if max_price else '' }}" placeholder="np. 600" required>
             </div>
-            <button type="submit">Szukaj okazji</button>
+            <button type="submit">Szukaj okazji na OLX</button>
         </form>
     </div>
 
     {% if offers is defined %}
         {% if offers %}
-            <h2 style="text-align:center; color: var(--accent-color);">Znalezione oferty: {{ offers|length }}</h2>
+            <h2 style="text-align:center; color: var(--accent-color);">Znaleziono {{ offers|length }} okazji na OLX!</h2>
             <div class="results-grid">
                 {% for item in offers %}
                 <div class="card">
                     <div class="card-img-container">
                         <img src="{{ item.photo }}" class="card-img" alt="{{ item.title }}">
-                        {% if item.size %}
-                            <span class="card-badge">Rozmiar: {{ item.size }}</span>
-                        {% endif %}
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">{{ item.title }}</h3>
                         <div class="card-price">{{ item.price }} PLN</div>
-                        <div class="card-info">
-                            👤 <b>Sprzedawca:</b> {{ item.user }}<br>
-                            🏷️ <b>Marka:</b> {{ item.brand if item.brand else 'Brak' }}<br>
-                            ✨ <b>Stan:</b> {{ item.status }}
-                        </div>
-                        <a href="{{ item.url }}" target="_blank" class="card-btn">Zobacz na Vinted ↗</a>
+                        <div class="card-location">📍 {{ item.location }}</div>
+                        <a href="{{ item.url }}" target="_blank" class="card-btn">Otwórz w OLX ↗</a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p style="text-align:center; color: #ef4444; font-size:16px;">
-                Brak ofert dla frazy "<b>{{ query }}</b>" do {{ max_price }} PLN lub Vinted tymczasowo zablokowało połączenie (zabezpieczenie botowe).
-            </p>
+            <p style="text-align:center; color: #ef4444; font-size:15px;">Brak ofert na OLX dla "{{ query }}" do {{ max_price }} PLN.</p>
         {% endif %}
     {% endif %}
 
