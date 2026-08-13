@@ -12,6 +12,7 @@
             --text: #f0f6fc;
             --text-muted: #8b949e;
             --red: #ff4757;
+            --yellow: #eccc68;
         }
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg); color: var(--text); margin: 0; padding: 16px; }
@@ -20,27 +21,31 @@
         .header h1 { margin: 0; color: var(--accent); font-size: 20px; }
         
         .accounts-panel { max-width: 1000px; margin: 0 auto 30px auto; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-        .accounts-panel h2 { font-size: 14px; margin-top: 0; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; }
+        .accounts-panel h2 { font-size: 13px; margin-top: 0; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
         
-        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-        .account-card { background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
-        .account-header { font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
+        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+        .account-card { background: #0d1117; padding: 10px; border-radius: 8px; border: 1px solid #30363d; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+        .account-header { font-weight: bold; font-size: 13px; }
         
         .btn { display: block; text-align: center; background: #238636; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; }
         .btn-disconnect { background: #21262d; color: var(--red); border: 1px solid var(--red); }
 
         .container { max-width: 1000px; margin: 0 auto; }
-        .section-title { font-size: 18px; color: var(--accent); margin: 30px 0 15px 0; font-weight: bold; }
+        .section-title { font-size: 18px; color: var(--accent); margin: 30px 0 15px 0; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         
         .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
         .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #30363d; display: flex; flex-direction: column; position: relative; }
         .card-img { width: 100%; height: 130px; object-fit: cover; background: #000; }
         .badge-free { position: absolute; top: 8px; right: 8px; background: var(--accent); color: #000; font-weight: bold; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
+        .badge-discount { position: absolute; top: 8px; right: 8px; background: var(--red); color: #fff; font-weight: bold; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
+        .badge-upcoming { position: absolute; top: 8px; right: 8px; background: var(--yellow); color: #000; font-weight: bold; padding: 3px 6px; border-radius: 4px; font-size: 11px; }
         
         .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-size: 13px; font-weight: bold; margin: 0 0 6px 0; line-height: 1.3; }
+        .card-title { font-size: 14px; font-weight: bold; margin: 0 0 6px 0; line-height: 1.3; }
         .card-store { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
         .card-price { font-size: 16px; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
+        
+        .timer-box { background: #0d1117; padding: 8px; border-radius: 6px; font-size: 11px; color: var(--yellow); font-weight: bold; text-align: center; margin-bottom: 10px; border: 1px dashed var(--yellow); }
         
         .btn-claim { background: var(--accent); color: black; border: none; padding: 8px; border-radius: 6px; font-weight: bold; text-align: center; text-decoration: none; font-size: 12px; margin-top: auto; }
     </style>
@@ -52,77 +57,41 @@
         <div style="font-size:12px;">Auto-Bot: <span style="color:var(--accent); font-weight:bold;">AKTYWNY 🟢</span></div>
     </div>
 
-    <!-- PANEL POLĄCZONYCH KONT -->
+    <!-- PANEL POŁĄCZONYCH KONT -->
     <div class="accounts-panel">
-        <h2>Połączone Konta (Auto-Przypisywanie)</h2>
+        <h2>Twoje Połączone Konta</h2>
         <div class="accounts-grid">
-            
-            <!-- STEAM -->
             <div class="account-card">
                 <div class="account-header">Steam</div>
-                {% if connected.steam %}
-                    <span style="color:var(--accent); font-size:11px;">Połączono (ID: {{ connected.steam[:8] }}...)</span>
-                    <a href="/disconnect/steam" class="btn btn-disconnect">Odłącz</a>
-                {% else %}
-                    <a href="/login/steam" class="btn">Połącz Steam ↗</a>
-                {% endif %}
+                {% if connected.steam %}<span style="color:var(--accent); font-size:11px;">Połączono</span><a href="/disconnect/steam" class="btn btn-disconnect">Odłącz</a>{% else %}<a href="/login/steam" class="btn">Połącz Steam ↗</a>{% endif %}
             </div>
-
-            <!-- EPIC GAMES -->
             <div class="account-card">
                 <div class="account-header">Epic Games</div>
-                {% if connected.epic %}
-                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
-                    <a href="/disconnect/epic" class="btn btn-disconnect">Odłącz</a>
-                {% else %}
-                    <a href="/login/epic" target="_blank" class="btn">Połącz Epic ↗</a>
-                {% endif %}
+                {% if connected.epic %}<span style="color:var(--accent); font-size:11px;">Połączono</span><a href="/disconnect/epic" class="btn btn-disconnect">Odłącz</a>{% else %}<a href="/login/epic" target="_blank" class="btn">Połącz Epic ↗</a>{% endif %}
             </div>
-
-            <!-- UBISOFT -->
             <div class="account-card">
                 <div class="account-header">Ubisoft</div>
-                {% if connected.ubisoft %}
-                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
-                    <a href="/disconnect/ubisoft" class="btn btn-disconnect">Odłącz</a>
-                {% else %}
-                    <a href="/login/ubisoft" target="_blank" class="btn">Połącz Ubisoft ↗</a>
-                {% endif %}
+                {% if connected.ubisoft %}<span style="color:var(--accent); font-size:11px;">Połączono</span><a href="/disconnect/ubisoft" class="btn btn-disconnect">Odłącz</a>{% else %}<a href="/login/ubisoft" target="_blank" class="btn">Połącz Ubisoft ↗</a>{% endif %}
             </div>
-
-            <!-- XBOX -->
             <div class="account-card">
                 <div class="account-header">Xbox</div>
-                {% if connected.xbox %}
-                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
-                    <a href="/disconnect/xbox" class="btn btn-disconnect">Odłącz</a>
-                {% else %}
-                    <a href="/login/xbox" target="_blank" class="btn">Połącz Xbox ↗</a>
-                {% endif %}
+                {% if connected.xbox %}<span style="color:var(--accent); font-size:11px;">Połączono</span><a href="/disconnect/xbox" class="btn btn-disconnect">Odłącz</a>{% else %}<a href="/login/xbox" target="_blank" class="btn">Połącz Xbox ↗</a>{% endif %}
             </div>
-
-            <!-- PLAYSTATION -->
             <div class="account-card">
                 <div class="account-header">PlayStation</div>
-                {% if connected.psn %}
-                    <span style="color:var(--accent); font-size:11px;">Połączono</span>
-                    <a href="/disconnect/psn" class="btn btn-disconnect">Odłącz</a>
-                {% else %}
-                    <a href="/login/psn" target="_blank" class="btn">Połącz PSN ↗</a>
-                {% endif %}
+                {% if connected.psn %}<span style="color:var(--accent); font-size:11px;">Połączono</span><a href="/disconnect/psn" class="btn btn-disconnect">Odłącz</a>{% else %}<a href="/login/psn" target="_blank" class="btn">Połącz PSN ↗</a>{% endif %}
             </div>
-
         </div>
     </div>
 
     <div class="container">
         
-        <!-- SEKCJA DARMOWE GRY -->
-        <div class="section-title">🎁 Aktualne Darmowe Gry Tygodnia (100% OFF)</div>
+        <!-- AKTUALNE DARMOWE GRY -->
+        <div class="section-title">🎁 Aktualnie Darmowe Gry Tygodnia (100% OFF)</div>
         <div class="deals-grid">
-            {% for game in freebies %}
+            {% for game in current_freebies %}
             <div class="card">
-                <span class="badge-free">DARMOWA</span>
+                <span class="badge-free">DARMOWA NOW</span>
                 <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
@@ -134,11 +103,31 @@
             {% endfor %}
         </div>
 
-        <!-- SEKCJA TOP PROMOCJE -->
-        <div class="section-title">🔥 Top 10 Największych Promocji Gier</div>
+        <!-- NADCHODZĄCA DARMOWA GRA + ZEGAR -->
+        {% if upcoming_freebies %}
+        <div class="section-title">⏳ Następna Darmowa Gra (Zapowiedź)</div>
+        <div class="deals-grid">
+            {% for game in upcoming_freebies %}
+            <div class="card">
+                <span class="badge-upcoming">WKRÓTCE</span>
+                <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
+                <div class="card-body">
+                    <div class="card-title">{{ game.title }}</div>
+                    <div class="card-store">Sklep: {{ game.store }}</div>
+                    <div class="timer-box">Odblokowanie za: <span class="countdown" data-time="{{ game.start_date }}">Ładowanie...</span></div>
+                    <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#30363d; color:white;">Zobacz w Sklepie ↗</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- TOP 10 PROMOCJI OD -50% DO -90% -->
+        <div class="section-title">🔥 Top 10 Promocji (Od -50% do -90%)</div>
         <div class="deals-grid">
             {% for game in top_deals %}
             <div class="card">
+                <span class="badge-discount">-{{ game.discount }}%</span>
                 <img src="{{ game.thumb }}" class="card-img" alt="{{ game.title }}">
                 <div class="card-body">
                     <div class="card-title">{{ game.title }}</div>
@@ -147,13 +136,38 @@
                         <span class="card-price">${{ game.price }}</span>
                         <span style="font-size:11px; color:var(--text-muted); text-decoration:line-through;">${{ game.old_price }}</span>
                     </div>
-                    <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#21262d; color:white;">Przejdź do oferty ↗</a>
+                    <a href="{{ game.url }}" target="_blank" class="btn-claim" style="background:#21262d; color:white;">Kup z rabatem ↗</a>
                 </div>
             </div>
             {% endfor %}
         </div>
 
     </div>
+
+    <!-- Skrypt Zegara Odliczającego -->
+    <script>
+        function updateCountdowns() {
+            document.querySelectorAll('.countdown').forEach(el => {
+                const targetDate = new Date(el.getAttribute('data-time')).getTime();
+                const now = new Date().getTime();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    el.innerHTML = "JUŻ DOSTĘPNA!";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                el.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            });
+        }
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns();
+    </script>
 
 </body>
 </html>
