@@ -2,3259 +2,393 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-
-<title>FPS Football Player Simulator 0.0.9v by.mEmmor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPS Football Player Simulator 0.1.0v by.mEmmor</title>
 
 <style>
-*{box-sizing:border-box}
-
-:root{
-    --bg:#070b10;
-    --panel:#101720;
-    --panel2:#151e29;
-    --border:#263342;
-    --green:#20c878;
-    --green2:#0d8f55;
-    --text:#f2f5f7;
-    --muted:#8996a5;
-    --gold:#f5c451;
-    --red:#ef5964;
-    --blue:#4c9cff;
-}
-
-body{
-    margin:0;
-    background:
-        radial-gradient(circle at top,#14251f 0,#070b10 40%);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-    min-height:100vh;
-}
-
-button,input,select{
-    font:inherit;
-}
-
-button{
-    border:0;
-    cursor:pointer;
-}
-
-#app{
-    width:100%;
-    max-width:760px;
-    margin:auto;
-    min-height:100vh;
-    background:rgba(7,11,16,.95);
-    box-shadow:0 0 50px rgba(0,0,0,.45);
-}
-
-.header{
-    padding:18px;
-    border-bottom:1px solid var(--border);
-    background:linear-gradient(135deg,#10251d,#0b1118);
-    position:sticky;
-    top:0;
-    z-index:10;
-}
-
-.logo{
-    font-size:20px;
-    font-weight:900;
-    letter-spacing:1px;
-}
-
-.version{
-    color:var(--green);
-    font-size:11px;
-    font-weight:800;
-    margin-top:3px;
-}
-
-.content{
-    padding:16px;
-    padding-bottom:90px;
-}
-
-.screen{
-    display:none;
-}
-
-.screen.active{
-    display:block;
-}
-
-.card{
-    background:linear-gradient(145deg,var(--panel2),var(--panel));
-    border:1px solid var(--border);
-    border-radius:15px;
-    padding:16px;
-    margin-bottom:14px;
-}
-
-.hero{
-    text-align:center;
-    padding:30px 18px;
-    background:
-        radial-gradient(circle at center,#163d2d 0,#0c1513 55%,#101720 100%);
-}
-
-.hero h1{
-    font-size:27px;
-    margin:0;
-}
-
-.hero p{
-    color:var(--muted);
-    margin:8px 0 25px;
-}
-
-.btn{
-    width:100%;
-    padding:13px;
-    border-radius:10px;
-    background:var(--green);
-    color:#04150d;
-    font-weight:900;
-    margin-top:8px;
-}
-
-.btn.secondary{
-    background:#202b38;
-    color:white;
-}
-
-.btn.danger{
-    background:#432329;
-    color:#ffb4bb;
-}
-
-.btn.gold{
-    background:var(--gold);
-    color:#171208;
-}
-
-input,select{
-    width:100%;
-    background:#080d13;
-    border:1px solid var(--border);
-    color:white;
-    padding:12px;
-    border-radius:9px;
-    margin:6px 0 13px;
-}
-
-label{
-    color:#aeb9c4;
-    font-size:12px;
-    font-weight:700;
-}
-
-.profile{
-    display:flex;
-    gap:14px;
-    align-items:center;
-}
-
-.avatar{
-    width:70px;
-    height:70px;
-    border-radius:18px;
-    background:linear-gradient(135deg,#1dc777,#075a37);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:30px;
-    font-weight:900;
-    flex-shrink:0;
-}
-
-.profile h2{
-    margin:0;
-    font-size:19px;
-}
-
-.muted{
-    color:var(--muted);
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:9px;
-    margin-top:15px;
-}
-
-.stat{
-    background:#0b1118;
-    border:1px solid #202c38;
-    padding:11px;
-    border-radius:10px;
-}
-
-.stat small{
-    display:block;
-    color:var(--muted);
-    font-size:10px;
-    text-transform:uppercase;
-}
-
-.stat b{
-    display:block;
-    font-size:18px;
-    margin-top:3px;
-}
-
-.ovr{
-    color:var(--green);
-}
-
-.goldText{
-    color:var(--gold);
-}
-
-.redText{
-    color:var(--red);
-}
-
-.blueText{
-    color:var(--blue);
-}
-
-.nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    max-width:760px;
-    margin:auto;
-    height:70px;
-    background:rgba(10,15,21,.97);
-    border-top:1px solid var(--border);
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    z-index:20;
-}
-
-.nav button{
-    background:none;
-    color:#778493;
-    font-size:10px;
-    font-weight:700;
-}
-
-.nav button span{
-    display:block;
-    font-size:20px;
-    margin-bottom:3px;
-}
-
-.nav button.active{
-    color:var(--green);
-}
-
-.sectionTitle{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin:20px 0 10px;
-}
-
-.sectionTitle h3{
-    margin:0;
-    font-size:15px;
-}
-
-.badge{
-    display:inline-block;
-    padding:4px 7px;
-    border-radius:6px;
-    background:#243244;
-    color:#b9c8d8;
-    font-size:10px;
-    font-weight:800;
-}
-
-.badge.green{
-    background:#103d2b;
-    color:#55e9a5;
-}
-
-.badge.gold{
-    background:#493c17;
-    color:#ffd96b;
-}
-
-.badge.red{
-    background:#442329;
-    color:#ff9da5;
-}
-
-.clubRow{
-    display:grid;
-    grid-template-columns:35px 1fr auto;
-    gap:8px;
-    align-items:center;
-    padding:11px 5px;
-    border-bottom:1px solid #202a34;
-}
-
-.clubRow:last-child{
-    border-bottom:0;
-}
-
-.position{
-    color:var(--muted);
-    font-weight:900;
-}
-
-.clubName{
-    font-weight:800;
-}
-
-.clubMeta{
-    color:var(--muted);
-    font-size:10px;
-    margin-top:2px;
-}
-
-.clubPoints{
-    text-align:right;
-    font-weight:900;
-}
-
-.myClub{
-    background:rgba(32,200,120,.09);
-    border-radius:8px;
-    margin:3px 0;
-}
-
-.event{
-    border-left:4px solid var(--green);
-}
-
-.event h2{
-    margin:8px 0;
-    font-size:18px;
-}
-
-.choice{
-    background:#18222d;
-    border:1px solid #293746;
-    color:white;
-    width:100%;
-    text-align:left;
-    padding:13px;
-    border-radius:10px;
-    margin-top:8px;
-}
-
-.choice:hover{
-    border-color:var(--green);
-    background:#1b2c27;
-}
-
-.choice strong{
-    display:block;
-}
-
-.choice small{
-    color:var(--muted);
-    display:block;
-    margin-top:4px;
-}
-
-.transfer{
-    border:1px solid #2b3b4b;
-    border-radius:12px;
-    padding:14px;
-    margin-top:10px;
-    background:#111a23;
-}
-
-.transfer h3{
-    margin:0;
-}
-
-.money{
-    color:var(--gold);
-    font-weight:900;
-}
-
-.news{
-    padding:11px 0;
-    border-bottom:1px solid #202a34;
-}
-
-.news:last-child{
-    border-bottom:0;
-}
-
-.small{
-    font-size:11px;
-}
-
-.center{
-    text-align:center;
-}
-
-.bigNumber{
-    font-size:42px;
-    font-weight:950;
-}
-
-.match{
-    display:grid;
-    grid-template-columns:1fr auto 1fr;
-    gap:10px;
-    align-items:center;
-    padding:12px 4px;
-    border-bottom:1px solid #202a34;
-}
-
-.match div:last-child{
-    text-align:right;
-}
-
-.score{
-    font-weight:900;
-    font-size:18px;
-}
-
-.progress{
-    height:7px;
-    background:#26303b;
-    border-radius:10px;
-    overflow:hidden;
-    margin-top:6px;
-}
-
-.progress div{
-    height:100%;
-    background:var(--green);
-}
-
-.tournament{
-    padding:14px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#18253a,#101721);
-    border:1px solid #2a3d59;
-    margin-bottom:10px;
-}
-
-.country{
-    display:flex;
-    justify-content:space-between;
-    padding:10px;
-    border-bottom:1px solid #202a34;
-}
-
-.historyRow{
-    padding:12px 0;
-    border-bottom:1px solid #202a34;
-}
-
-.historyRow:last-child{
-    border-bottom:0;
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.8);
-    z-index:50;
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modalBox{
-    width:100%;
-    max-width:760px;
-    background:#111820;
-    border:1px solid var(--border);
-    border-radius:20px 20px 0 0;
-    padding:20px;
-    max-height:90vh;
-    overflow:auto;
-}
-
-@media(min-width:700px){
-    .modal{
-        align-items:center;
+    * {
+        box-sizing: border-box;
     }
 
-    .modalBox{
-        border-radius:18px;
-    }
-}
-
-@media(max-width:500px){
-    .stats{
-        grid-template-columns:1fr 1fr;
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #10141c;
+        color: white;
     }
 
-    .hero h1{
-        font-size:23px;
+    .game {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
     }
-}
+
+    h1 {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .version {
+        text-align: center;
+        color: #8f9aaa;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        background: #191f2b;
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 20px #0005;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat {
+        background: #242b39;
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .bar {
+        height: 8px;
+        background: #11151d;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 6px;
+    }
+
+    .fill {
+        height: 100%;
+        background: #35c759;
+        width: 0%;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        border: 0;
+        border-radius: 10px;
+        background: #287cff;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1768df;
+    }
+
+    button.secondary {
+        background: #343d4d;
+    }
+
+    .event {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    .money {
+        color: #ffd84d;
+        font-weight: bold;
+    }
+
+    .positive {
+        color: #43dc72;
+    }
+
+    .negative {
+        color: #ff5757;
+    }
+
+    .footer {
+        text-align: center;
+        color: #687385;
+        font-size: 13px;
+        margin-top: 25px;
+    }
 </style>
 </head>
 
 <body>
 
-<div id="app">
+<div class="game">
 
-<header class="header">
-    <div class="logo">⚽ FPS FOOTBALL PLAYER</div>
-    <div class="version">SIMULATOR PRO • 0.0.5v</div>
-</header>
+    <h1>⚽ FPS Football Player Simulator</h1>
+    <div class="version">0.1.0v by.mEmmor</div>
 
-<main class="content">
-
-<!-- START -->
-
-<section id="startScreen" class="screen active">
-
-    <div class="card hero">
-
-        <div style="font-size:52px">⚽</div>
-
-        <h1>Polski Piłkarz Simulator PRO</h1>
-
+    <div class="card">
+        <h2 id="playerName">Nowy zawodnik</h2>
         <p>
-            Zbuduj karierę od pierwszego kontraktu
-            aż po reprezentację Polski.
+            Wiek: <span id="age">17</span> |
+            Klub: <span id="club">Akademia FC</span>
         </p>
-
-        <button class="btn" onclick="showCreation()">
-            🚀 ROZPOCZNIJ KARIERĘ
-        </button>
-
-        <button class="btn secondary" onclick="loadGame()">
-            💾 WCZYTAJ KARIERĘ
-        </button>
-
-    </div>
-
-    <div class="card">
-
-        <div class="sectionTitle">
-            <h3>TRYB KARIERY</h3>
-            <span class="badge green">PRO</span>
-        </div>
-
-        <p class="muted small">
-            Transfery • Ekstraklasa • 1 Liga • 2 Liga •
-            awanse • spadki • baraże • reprezentacja •
-            EURO • Mistrzostwa Świata • rozwój zawodnika
+        <p>
+            Pozycja: <span id="position">Napastnik</span>
         </p>
-
-    </div>
-
-</section>
-
-
-<!-- CREATION -->
-
-<section id="creationScreen" class="screen">
-
-    <div class="sectionTitle">
-        <h3>👤 STWÓRZ ZAWODNIKA</h3>
-        <span class="badge">KROK 1</span>
+        <p>
+            Pieniądze: <span class="money">€<span id="money">500</span></span>
+        </p>
     </div>
 
     <div class="card">
-
-        <label>Imię i nazwisko</label>
-        <input id="createName" value="Zbigniew Mandziejewicz">
-
-        <label>Rok urodzenia</label>
-        <input
-            id="createBirth"
-            type="number"
-            value="2008"
-            min="1980"
-            max="2010"
-        >
-
-        <label>Pozycja</label>
-
-        <select id="createPosition">
-            <option>Napastnik</option>
-            <option>Pomocnik</option>
-            <option>Obrońca</option>
-            <option>Bramkarz</option>
-        </select>
-
-        <label>Kraj</label>
-
-        <select id="createCountry">
-            <option>Polska</option>
-            <option>Niemcy</option>
-            <option>Hiszpania</option>
-            <option>Francja</option>
-            <option>Włochy</option>
-            <option>Anglia</option>
-            <option>Portugalia</option>
-            <option>Holandia</option>
-            <option>Belgia</option>
-            <option>Chorwacja</option>
-            <option>Brazylia</option>
-            <option>Argentyna</option>
-            <option>USA</option>
-            <option>Japonia</option>
-            <option>Maroko</option>
-        </select>
-
-        <label>Poziom startowy</label>
-
-        <select id="createOVR">
-            <option value="40">
-                B-klasowy wyjadacz • 40 OVR
-            </option>
-
-            <option value="48" selected>
-                Normalny zawodnik • 48 OVR
-            </option>
-
-            <option value="55">
-                Talent • 55 OVR
-            </option>
-
-            <option value="63">
-                Wonderkid • 63 OVR
-            </option>
-        </select>
-
-        <button class="btn" onclick="createPlayer()">
-            ⚽ ROZPOCZNIJ KARIERĘ
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="showScreen('startScreen')"
-        >
-            ↩️ WRÓĆ
-        </button>
-
-    </div>
-
-</section>
-
-
-<!-- CAREER -->
-
-<section id="careerScreen" class="screen">
-
-    <div class="card">
-
-        <div class="profile">
-
-            <div class="avatar" id="avatar">
-                ⚽
-            </div>
-
-            <div>
-
-                <h2 id="pName">---</h2>
-
-                <div
-                    class="muted"
-                    id="pInfo"
-                >
-                    ---
-                </div>
-
-                <div id="pClub">
-                    ---
-                </div>
-
-            </div>
-
-        </div>
+        <h2>📊 Statystyki</h2>
 
         <div class="stats">
 
             <div class="stat">
-                <small>OVR</small>
-                <b class="ovr" id="pOVR">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Forma</small>
-                <b id="pForm">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Reputacja</small>
-                <b id="pRep">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Trener</small>
-                <b id="pCoach">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Wartość</small>
-                <b class="goldText" id="pValue">
-                    0 PLN
-                </b>
-            </div>
-
-            <div class="stat">
-                <small>Konto</small>
-                <b class="goldText" id="pMoney">
-                    0 PLN
-                </b>
-            </div>
-
-            <div class="stat">
-                <small>Sezon</small>
-                <b id="pYear">2026</b>
-            </div>
-
-            <div class="stat">
-                <small>Wiek</small>
-                <b id="pAge">18</b>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- PROSTE WYBORY -->
-
-    <div class="card event">
-
-        <div
-            class="badge green"
-            id="eventTag"
-        >
-            KARIERA
-        </div>
-
-        <h2 id="eventTitle">
-            Witaj w świecie futbolu
-        </h2>
-
-        <p
-            class="muted"
-            id="eventDescription"
-        >
-            Rozpoczynasz karierę.
-        </p>
-
-        <div id="eventChoices"></div>
-
-    </div>
-
-
-    <!-- MECZ -->
-
-    <div class="card">
-
-        <div class="sectionTitle">
-
-            <h3>⚽ OSTATNI MECZ</h3>
-
-            <span
-                class="badge"
-                id="lastMatchBadge"
-            >
-                ---
-            </span>
-
-        </div>
-
-        <div id="lastMatch">
-            Brak rozegranego meczu.
-        </div>
-
-    </div>
-
-
-    <!-- STATY -->
-
-    <div class="card">
-
-        <div class="sectionTitle">
-            <h3>📈 TEN SEZON</h3>
-        </div>
-
-        <div class="stats">
-
-            <div class="stat">
-                <small>Mecze</small>
-                <b id="seasonMatches">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Minuty</small>
-                <b id="seasonMinutes">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Gole</small>
-                <b id="seasonGoals">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Asysty</small>
-                <b id="seasonAssists">0</b>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- NEWS -->
-
-    <div class="card">
-
-        <div class="sectionTitle">
-            <h3>📰 WIADOMOŚCI</h3>
-        </div>
-
-        <div id="newsList"></div>
-
-    </div>
-
-</section>
-
-
-<!-- CLUB -->
-
-<section id="clubScreen" class="screen">
-
-    <div class="sectionTitle">
-        <h3>🏟️ TWÓJ KLUB</h3>
-    </div>
-
-    <div class="card">
-
-        <div class="profile">
-
-            <div class="avatar">
-                🏟️
-            </div>
-
-            <div>
-
-                <h2 id="clubName">
-                    Bez klubu
-                </h2>
-
-                <div
-                    class="muted"
-                    id="clubLeague"
-                >
-                    ---
+                Kondycja: <span id="fitness">50</span>
+                <div class="bar">
+                    <div class="fill" id="fitnessBar"></div>
                 </div>
+            </div>
 
+            <div class="stat">
+                Umiejętności: <span id="skill">50</span>
+                <div class="bar">
+                    <div class="fill" id="skillBar"></div>
+                </div>
+            </div>
+
+            <div class="stat">
+                Reputacja: <span id="reputation">10</span>
+                <div class="bar">
+                    <div class="fill" id="reputationBar"></div>
+                </div>
+            </div>
+
+            <div class="stat">
+                Relacja z trenerem: <span id="coach">50</span>
+                <div class="bar">
+                    <div class="fill" id="coachBar"></div>
+                </div>
             </div>
 
         </div>
-
-        <div class="stats">
-
-            <div class="stat">
-                <small>OVR klubu</small>
-                <b id="clubOVR">0</b>
-            </div>
-
-            <div class="stat">
-                <small>Pensja</small>
-                <b
-                    class="goldText"
-                    id="clubWage"
-                >
-                    0 PLN
-                </b>
-            </div>
-
-            <div class="stat">
-                <small>Kontrakt</small>
-                <b id="clubContract">
-                    ---
-                </b>
-            </div>
-
-            <div class="stat">
-                <small>Miejsce</small>
-                <b id="clubPosition">
-                    -
-                </b>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <div class="sectionTitle">
-            <h3>📊 STATYSTYKI KLUBOWE</h3>
-        </div>
-
-        <div id="clubStats"></div>
-
-    </div>
-
-</section>
-
-
-<!-- TABLE -->
-
-<section id="tableScreen" class="screen">
-
-    <div class="sectionTitle">
-
-        <h3>🏆 TABELA LIGOWA</h3>
-
-        <select
-            id="leagueSelect"
-            onchange="renderTable()"
-            style="width:auto;margin:0;padding:7px"
-        >
-            <option>Ekstraklasa</option>
-            <option>1 Liga</option>
-            <option>2 Liga</option>
-        </select>
-
     </div>
 
     <div class="card">
-
-        <div id="tableContainer"></div>
-
-    </div>
-
-    <div class="card">
-
-        <h3>System rozgrywek</h3>
-
-        <p class="muted small">
-            🏆 Mistrz / awans<br>
-            🟢 Awans<br>
-            🟡 Baraże<br>
-            🔴 Spadek
+        <h2>📅 Kariera</h2>
+        <p>
+            Sezon: <b id="season">1</b>
+            &nbsp; | &nbsp;
+            Tydzień: <b id="week">1</b>
         </p>
-
-    </div>
-
-</section>
-
-
-<!-- WORLD -->
-
-<section id="worldScreen" class="screen">
-
-    <div class="sectionTitle">
-        <h3>🌍 ŚWIAT KARIERY</h3>
     </div>
 
     <div class="card">
+        <h2>💭 Decyzja</h2>
 
-        <button
-            class="btn"
-            onclick="showTransfers()"
-        >
-            🔄 TRANSFERY
-        </button>
+        <div class="event" id="event">
+            Trener zaproponował Ci dodatkowy trening.
+            Co robisz?
+        </div>
 
-        <button
-            class="btn secondary"
-            onclick="showNational()"
-        >
-            🇵🇱 REPREZENTACJA
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="showCountries()"
-        >
-            🌍 RANKING FIFA
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="showHistory()"
-        >
-            📖 HISTORIA KARIERY
-        </button>
-
-        <button
-            class="btn gold"
-            onclick="saveGame()"
-        >
-            💾 ZAPISZ GRĘ
-        </button>
-
-        <button
-            class="btn danger"
-            onclick="resetGame()"
-        >
-            🗑️ USUŃ KARIERĘ
-        </button>
-
+        <button onclick="train()">💪 Idę na trening</button>
+        <button onclick="rest()" class="secondary">😴 Odpoczywam</button>
+        <button onclick="talkCoach()" class="secondary">🗣️ Rozmawiam z trenerem</button>
     </div>
-
 
     <div class="card">
-
-        <h3>🌎 Rozgrywki międzynarodowe</h3>
-
-        <div class="tournament">
-
-            🏆 EURO
-
-            <div class="muted small">
-                Turniej co 4 lata.
-            </div>
-
+        <h2>📜 Dziennik kariery</h2>
+        <div id="log">
+            <p>Kariera rozpoczęta.</p>
         </div>
-
-        <div class="tournament">
-
-            🌎 FIFA WORLD CUP
-
-            <div class="muted small">
-                Mistrzostwa Świata co 4 lata.
-            </div>
-
-        </div>
-
     </div>
 
-</section>
-
-</main>
-
-
-<!-- NAV -->
-
-<nav
-    class="nav"
-    id="nav"
-    style="display:none"
->
-
-    <button
-        onclick="openTab('careerScreen',this)"
-        class="active"
-    >
-        <span>🏠</span>
-        Kariera
-    </button>
-
-    <button
-        onclick="openTab('clubScreen',this)"
-    >
-        <span>⚽</span>
-        Klub
-    </button>
-
-    <button
-        onclick="openTab('tableScreen',this)"
-    >
-        <span>📊</span>
-        Tabela
-    </button>
-
-    <button
-        onclick="openTab('worldScreen',this)"
-    >
-        <span>🌍</span>
-        Świat
-    </button>
-
-    <button
-        onclick="showHistory()"
-    >
-        <span>👤</span>
-        Profil
-    </button>
-
-</nav>
+    <div class="footer">
+        FPS Football Player Simulator 0.1.0v by.mEmmor
+    </div>
 
 </div>
-
-
-<div
-    class="modal"
-    id="modal"
->
-
-    <div
-        class="modalBox"
-        id="modalContent"
-    ></div>
-
-</div>
-
 
 <script>
 
-/* =========================================================
-   FPS FOOTBALL PLAYER SIMULATOR PRO
-   UPROSZCZONA ROZGRYWKA
-========================================================= */
+let player = {
+    name: "Nowy zawodnik",
+    age: 17,
+    club: "Akademia FC",
+    position: "Napastnik",
 
-const CURRENT_YEAR=2026;
+    money: 500,
 
+    fitness: 50,
+    skill: 50,
+    reputation: 10,
+    coach: 50,
 
-/* =========================================================
-   REPREZENTACJE
-========================================================= */
-
-const countries={
-
-    "Polska":{flag:"🇵🇱",ovr:72},
-    "Niemcy":{flag:"🇩🇪",ovr:85},
-    "Hiszpania":{flag:"🇪🇸",ovr:86},
-    "Francja":{flag:"🇫🇷",ovr:87},
-    "Włochy":{flag:"🇮🇹",ovr:83},
-    "Anglia":{flag:"🏴",ovr:87},
-    "Portugalia":{flag:"🇵🇹",ovr:84},
-    "Holandia":{flag:"🇳🇱",ovr:82},
-    "Belgia":{flag:"🇧🇪",ovr:79},
-    "Chorwacja":{flag:"🇭🇷",ovr:78},
-    "Brazylia":{flag:"🇧🇷",ovr:88},
-    "Argentyna":{flag:"🇦🇷",ovr:90},
-    "USA":{flag:"🇺🇸",ovr:75},
-    "Japonia":{flag:"🇯🇵",ovr:74},
-    "Maroko":{flag:"🇲🇦",ovr:79}
+    season: 1,
+    week: 1
 };
 
-
-/* =========================================================
-   LIGI
-========================================================= */
-
-const LEAGUES={
-
-"Ekstraklasa":{
-    level:1,
-    teams:[
-        ["Legia Warszawa",76,65000],
-        ["Lech Poznań",75,60000],
-        ["Raków Częstochowa",74,55000],
-        ["Jagiellonia Białystok",73,50000],
-        ["Pogoń Szczecin",72,45000],
-        ["Górnik Zabrze",71,38000],
-        ["Widzew Łódź",70,35000],
-        ["Cracovia",69,32000],
-        ["GKS Katowice",68,28000],
-        ["Piast Gliwice",68,27000],
-        ["Zagłębie Lubin",67,26000],
-        ["Motor Lublin",66,24000],
-        ["Radomiak Radom",66,23000],
-        ["Korona Kielce",65,21000],
-        ["Lechia Gdańsk",65,20000],
-        ["Wisła Płock",64,19000],
-        ["Arka Gdynia",64,18000],
-        ["Bruk-Bet Termalica",63,17000]
-    ]
-},
-
-"1 Liga":{
-    level:2,
-    teams:[
-        ["Wisła Kraków",63,22000],
-        ["Śląsk Wrocław",62,19000],
-        ["Ruch Chorzów",61,16000],
-        ["Miedź Legnica",60,14000],
-        ["Wieczysta Kraków",60,18000],
-        ["ŁKS Łódź",59,13000],
-        ["Stal Mielec",59,12000],
-        ["Polonia Warszawa",58,11000],
-        ["Puszcza Niepołomice",58,10500],
-        ["Odra Opole",57,9500],
-        ["Chrobry Głogów",56,9000],
-        ["Stal Rzeszów",56,8500],
-        ["Pogoń Grodzisk Maz.",55,8000],
-        ["Polonia Bytom",55,7800],
-        ["Warta Poznań",54,7500],
-        ["Pogoń Siedlce",53,7000],
-        ["Znicz Pruszków",53,6800],
-        ["Unia Skierniewice",52,6500]
-    ]
-},
-
-"2 Liga":{
-    level:3,
-    teams:[
-        ["Avia Świdnik",52,6000],
-        ["GKS Tychy",52,6200],
-        ["Podbeskidzie",51,5800],
-        ["Hutnik Kraków",50,5200],
-        ["Resovia Rzeszów",50,5000],
-        ["Zawisza Bydgoszcz",49,4600],
-        ["Chojniczanka",48,4300],
-        ["Górnik Łęczna",48,4200],
-        ["Stal Stalowa Wola",47,3900],
-        ["Sandecja Nowy Sącz",46,3600],
-        ["Lechia Zielona Góra",45,3400],
-        ["Olimpia Grudziądz",44,3100],
-        ["Rekord Bielsko-Biała",43,2900],
-        ["Podhale Nowy Targ",42,2700],
-        ["Świt Szczecin",41,2500],
-        ["Sokół Kleczew",40,2200],
-        ["Śląsk II Wrocław",38,1900],
-        ["Legia II Warszawa",35,1600]
-    ]
+function clamp(value) {
+    return Math.max(0, Math.min(100, value));
 }
 
-};
+function update() {
 
+    document.getElementById("playerName").textContent = player.name;
+    document.getElementById("age").textContent = player.age;
+    document.getElementById("club").textContent = player.club;
+    document.getElementById("position").textContent = player.position;
+    document.getElementById("money").textContent = player.money;
 
-/* =========================================================
-   TABELE
-========================================================= */
+    document.getElementById("fitness").textContent = player.fitness;
+    document.getElementById("skill").textContent = player.skill;
+    document.getElementById("reputation").textContent = player.reputation;
+    document.getElementById("coach").textContent = player.coach;
 
-let world={
-    tables:{},
-    history:[],
-    promotions:[],
-    relegations:[],
-    lastMatch:null
-};
+    document.getElementById("fitnessBar").style.width =
+        player.fitness + "%";
 
+    document.getElementById("skillBar").style.width =
+        player.skill + "%";
 
-function createWorld(){
+    document.getElementById("reputationBar").style.width =
+        player.reputation + "%";
 
-    world.tables={};
+    document.getElementById("coachBar").style.width =
+        player.coach + "%";
 
-    Object.keys(LEAGUES).forEach(league=>{
+    document.getElementById("season").textContent =
+        player.season;
 
-        world.tables[league]={};
-
-        LEAGUES[league].teams.forEach(c=>{
-
-            world.tables[league][c[0]]={
-
-                team:c[0],
-                ovr:c[1],
-                wage:c[2],
-
-                played:0,
-                wins:0,
-                draws:0,
-                losses:0,
-
-                gf:0,
-                ga:0,
-
-                points:0
-
-            };
-
-        });
-
-    });
-
+    document.getElementById("week").textContent =
+        player.week;
 }
 
+function nextWeek() {
 
-/* =========================================================
-   PLAYER
-========================================================= */
+    player.week++;
 
-let player={
+    if (player.week > 52) {
+        player.week = 1;
+        player.season++;
+        player.age++;
 
-    name:"",
-    birthYear:2008,
-    position:"Napastnik",
-    country:"Polska",
-
-    ovr:48,
-    form:60,
-
-    money:0,
-    reputation:5,
-    coachRelation:50,
-
-    currentYear:CURRENT_YEAR,
-
-    club:null,
-    league:null,
-
-    contractYears:2,
-
-    injury:0,
-
-    national:{
-        level:null,
-        caps:0,
-        goals:0,
-        assists:0
-    },
-
-    stats:{
-        matches:0,
-        starts:0,
-        bench:0,
-        mins:0,
-        goals:0,
-        assists:0,
-        yellow:0,
-        red:0
-    },
-
-    career:{
-        seasons:0,
-        totalMatches:0,
-        totalGoals:0,
-        totalAssists:0
-    },
-
-    history:[],
-
-    news:[]
-
-};
-
-
-/* =========================================================
-   EKRANY
-========================================================= */
-
-function showScreen(id){
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(x=>x.classList.remove("active"));
-
-    document
-        .getElementById(id)
-        .classList.add("active");
-
-}
-
-
-function showCreation(){
-
-    showScreen("creationScreen");
-
-}
-
-
-function openTab(id,btn){
-
-    showScreen(id);
-
-    document
-        .querySelectorAll(".nav button")
-        .forEach(x=>x.classList.remove("active"));
-
-    if(btn)
-        btn.classList.add("active");
-
-    updateUI();
-
-    if(id==="tableScreen")
-        renderTable();
-
-}
-
-
-/* =========================================================
-   START
-========================================================= */
-
-function createPlayer(){
-
-    player.name=
-        document.getElementById("createName")
-        .value.trim() || "Zawodnik";
-
-    player.birthYear=
-        parseInt(
-            document.getElementById("createBirth").value
-        ) || 2008;
-
-    player.position=
-        document.getElementById("createPosition").value;
-
-    player.country=
-        document.getElementById("createCountry").value;
-
-    player.ovr=
-        parseInt(
-            document.getElementById("createOVR").value
+        addLog(
+            "🎂 Rozpoczął się nowy sezon. Masz teraz " +
+            player.age + " lat."
         );
+    }
 
-    player.currentYear=CURRENT_YEAR;
+    update();
+}
 
-    player.money=0;
+function addLog(text) {
 
-    player.form=60;
+    const log = document.getElementById("log");
 
-    player.reputation=
-        Math.max(5,player.ovr-40);
+    const p = document.createElement("p");
+    p.innerHTML = text;
 
-    player.coachRelation=50;
+    log.prepend(p);
+}
 
-    player.stats={
-        matches:0,
-        starts:0,
-        bench:0,
-        mins:0,
-        goals:0,
-        assists:0,
-        yellow:0,
-        red:0
-    };
+function train() {
 
-    player.career={
-        seasons:0,
-        totalMatches:0,
-        totalGoals:0,
-        totalAssists:0
-    };
+    player.skill = clamp(player.skill + random(2, 5));
+    player.fitness = clamp(player.fitness - random(2, 5));
+    player.coach = clamp(player.coach + random(1, 3));
 
-    player.history=[];
-    player.news=[];
+    document.getElementById("event").innerHTML =
+        "🔥 Dobry trening! Twoje umiejętności wzrosły.";
 
-    createWorld();
-
-    addNews(
-        "Rozpoczynasz swoją profesjonalną karierę."
+    addLog(
+        "<span class='positive'>💪 Trening: +umiejętności, +relacja z trenerem.</span>"
     );
 
-    findFirstClub();
-
-    document
-        .getElementById("nav")
-        .style.display="grid";
-
-    showScreen("careerScreen");
-
-    updateUI();
-
-    firstCareerEvent();
-
+    randomEvent();
+    nextWeek();
 }
 
+function rest() {
 
-/* =========================================================
-   PIERWSZY KLUB
-========================================================= */
+    player.fitness = clamp(player.fitness + random(5, 10));
+    player.skill = clamp(player.skill - random(0, 1));
 
-function findFirstClub(){
+    document.getElementById("event").innerHTML =
+        "😴 Odpocząłeś i odzyskałeś siły.";
 
-    let offers=[];
-
-    Object.keys(world.tables)
-    .forEach(league=>{
-
-        Object.values(world.tables[league])
-        .forEach(club=>{
-
-            if(
-                player.ovr>=club.ovr-12 &&
-                player.ovr<=club.ovr+5
-            ){
-
-                offers.push({
-                    name:club.team,
-                    league:league,
-                    ovr:club.ovr,
-                    wage:club.wage
-                });
-
-            }
-
-        });
-
-    });
-
-    offers.sort(()=>Math.random()-.5);
-
-    let c=offers[0];
-
-    if(!c){
-
-        c={
-            name:"GKS Tychy",
-            league:"2 Liga",
-            ovr:52,
-            wage:4500
-        };
-
-    }
-
-    player.club={
-        name:c.name,
-        ovr:c.ovr,
-        wage:c.wage
-    };
-
-    player.league=c.league;
-
-    player.contractYears=2;
-
-}
-
-
-/* =========================================================
-   UI
-========================================================= */
-
-function updateUI(){
-
-    if(!player.name)
-        return;
-
-    let age=
-        player.currentYear-player.birthYear;
-
-    document.getElementById("pName").innerText=
-        player.name;
-
-    document.getElementById("pInfo").innerText=
-        `${countries[player.country]?.flag||"🌍"} ${player.country} • ${player.position} • ${age} lat`;
-
-    document.getElementById("pClub").innerText=
-        player.club
-        ? `${player.club.name} • ${player.league}`
-        : "Bez klubu";
-
-    document.getElementById("pOVR").innerText=
-        player.ovr;
-
-    document.getElementById("pForm").innerText=
-        player.form;
-
-    document.getElementById("pRep").innerText=
-        player.reputation;
-
-    document.getElementById("pCoach").innerText=
-        player.coachRelation;
-
-    document.getElementById("pValue").innerText=
-        money(getPlayerValue());
-
-    document.getElementById("pMoney").innerText=
-        money(player.money);
-
-    document.getElementById("pYear").innerText=
-        player.currentYear;
-
-    document.getElementById("pAge").innerText=
-        age;
-
-    if(player.club){
-
-        document.getElementById("clubName").innerText=
-            player.club.name;
-
-        document.getElementById("clubLeague").innerText=
-            player.league;
-
-        document.getElementById("clubOVR").innerText=
-            player.club.ovr;
-
-        document.getElementById("clubWage").innerText=
-            money(player.club.wage)+" / mies.";
-
-        document.getElementById("clubContract").innerText=
-            player.contractYears+" lata";
-
-        let pos=
-            getSortedTable(player.league)
-            .findIndex(
-                x=>x.team===player.club.name
-            )+1;
-
-        document.getElementById("clubPosition").innerText=
-            pos+".";
-
-    }
-
-    document.getElementById("seasonMatches").innerText=
-        player.stats.matches;
-
-    document.getElementById("seasonMinutes").innerText=
-        player.stats.mins;
-
-    document.getElementById("seasonGoals").innerText=
-        player.stats.goals;
-
-    document.getElementById("seasonAssists").innerText=
-        player.stats.assists;
-
-    renderClubStats();
-
-    renderNews();
-
-    if(world.lastMatch)
-        renderLastMatch();
-
-}
-
-
-/* =========================================================
-   WARTOŚĆ
-========================================================= */
-
-function getPlayerValue(){
-
-    return Math.round(
-        player.ovr*player.ovr*25+
-        player.reputation*1000
+    addLog(
+        "<span class='positive'>😴 Odpoczynek: odzyskano kondycję.</span>"
     );
 
+    randomEvent();
+    nextWeek();
 }
 
+function talkCoach() {
 
-function money(n){
+    player.coach = clamp(player.coach + random(3, 7));
 
-    return Math.round(n)
-        .toLocaleString("pl-PL")+" PLN";
+    document.getElementById("event").innerHTML =
+        "🗣️ Rozmowa z trenerem przebiegła dobrze.";
 
-}
-
-
-/* =========================================================
-   NEWS
-========================================================= */
-
-function addNews(text){
-
-    player.news.push(text);
-
-    if(player.news.length>20)
-        player.news.shift();
-
-}
-
-
-function renderNews(){
-
-    document.getElementById("newsList").innerHTML=
-        player.news
-        .slice(-6)
-        .reverse()
-        .map(n=>
-            `<div class="news">📰 ${n}</div>`
-        )
-        .join("");
-
-}
-
-
-/* =========================================================
-   PROSTE WYBORY
-========================================================= */
-
-function firstCareerEvent(){
-
-    showSimpleEvent(
-        "🚀 START KARIERY",
-        "Pierwszy krok może mieć wpływ na cały sezon.",
-        [
-            {
-                title:"💪 Ciężki trening",
-                desc:"+2 OVR, -10 formy",
-                action:()=>{
-                    player.ovr+=2;
-                    player.form-=10;
-                }
-            },
-            {
-                title:"🧠 Trening taktyczny",
-                desc:"+10 relacji z trenerem, +5 formy",
-                action:()=>{
-                    player.coachRelation+=10;
-                    player.form+=5;
-                }
-            },
-            {
-                title:"😴 Regeneracja",
-                desc:"+20 formy",
-                action:()=>{
-                    player.form+=20;
-                }
-            }
-        ]
+    addLog(
+        "<span class='positive'>🗣️ Relacja z trenerem wzrosła.</span>"
     );
 
+    randomEvent();
+    nextWeek();
 }
 
+function randomEvent() {
 
-function showSimpleEvent(title,desc,choices){
+    const chance = Math.random();
 
-    document.getElementById("eventTitle")
-        .innerText=title;
+    if (chance < 0.15) {
 
-    document.getElementById("eventDescription")
-        .innerText=desc;
+        player.reputation =
+            clamp(player.reputation + random(2, 5));
 
-    document.getElementById("eventTag")
-        .innerText="DECYZJA";
+        document.getElementById("event").innerHTML =
+            "⭐ Lokalny dziennikarz napisał o Twoim rozwoju!";
 
-    let box=
-        document.getElementById("eventChoices");
-
-    box.innerHTML="";
-
-    choices.forEach(choice=>{
-
-        let btn=
-            document.createElement("button");
-
-        btn.className="choice";
-
-        btn.innerHTML=`
-            <strong>${choice.title}</strong>
-            <small>${choice.desc}</small>
-        `;
-
-        btn.onclick=()=>{
-
-            choice.action();
-
-            clampStats();
-
-            simulateMatch();
-
-        };
-
-        box.appendChild(btn);
-
-    });
-
-}
-
-
-/* =========================================================
-   NASTĘPNA DECYZJA
-========================================================= */
-
-function nextDecision(){
-
-    let choices=[
-
-        {
-            title:"🏋️ Trening indywidualny",
-            desc:"+2 OVR, -10 formy",
-            action:()=>{
-                player.ovr+=2;
-                player.form-=10;
-            }
-        },
-
-        {
-            title:"🧘 Regeneracja",
-            desc:"+15 formy",
-            action:()=>{
-                player.form+=15;
-            }
-        },
-
-        {
-            title:"🤝 Integracja z drużyną",
-            desc:"+10 trener, +10 morale",
-            action:()=>{
-                player.coachRelation+=10;
-                player.form+=5;
-            }
-        },
-
-        {
-            title:"📱 Media",
-            desc:"+10 reputacji, -5 trener",
-            action:()=>{
-                player.reputation+=10;
-                player.coachRelation-=5;
-            }
-        },
-
-        {
-            title:"📚 Taktyka",
-            desc:"+5 trener, +1 OVR",
-            action:()=>{
-                player.coachRelation+=5;
-                player.ovr+=1;
-            }
-        }
-
-    ];
-
-    showSimpleEvent(
-        "🎯 TYDZIEŃ KARIERY",
-        "Wybierz jedną prostą decyzję przed kolejnym meczem.",
-        choices
-    );
-
-}
-
-
-/* =========================================================
-   STATY
-========================================================= */
-
-function clampStats(){
-
-    player.form=
-        Math.max(
-            10,
-            Math.min(100,player.form)
+        addLog(
+            "<span class='positive'>⭐ Reputacja wzrosła.</span>"
         );
-
-    player.coachRelation=
-        Math.max(
-            0,
-            Math.min(100,player.coachRelation)
-        );
-
-    player.reputation=
-        Math.max(
-            0,
-            Math.min(100,player.reputation)
-        );
-
-    player.ovr=
-        Math.max(
-            30,
-            Math.min(99,player.ovr)
-        );
-
-}
-
-
-/* =========================================================
-   MECZ
-========================================================= */
-
-function simulateMatch(){
-
-    if(!player.club){
-
-        nextDecision();
-
-        return;
-
     }
 
-    if(player.injury>0){
+    else if (chance < 0.25) {
 
-        player.injury--;
+        player.money += random(50, 150);
 
-        addNews(
-            `Kontuzja. Pozostało ${player.injury} tygodni przerwy.`
+        document.getElementById("event").innerHTML =
+            "💰 Otrzymałeś premię za dobre zachowanie.";
+
+        addLog(
+            "<span class='positive'>💰 Otrzymano premię.</span>"
         );
-
-        advanceWeek();
-
-        return;
-
     }
 
-    let club=
-        world.tables[player.league][player.club.name];
+    else if (chance < 0.32) {
 
-    let opponent=
-        getRandomOpponent(
-            player.league,
-            player.club.name
+        player.fitness =
+            clamp(player.fitness - random(3, 8));
+
+        document.getElementById("event").innerHTML =
+            "🤕 Czujesz lekkie zmęczenie po ostatnich dniach.";
+
+        addLog(
+            "<span class='negative'>🤕 Kondycja spadła.</span>"
         );
-
-    let strengthA=
-        club.ovr+
-        player.form*.10;
-
-    let strengthB=
-        opponent.ovr+
-        opponent.form*.10;
-
-    let goalsA=
-        Math.floor(Math.random()*3);
-
-    let goalsB=
-        Math.floor(Math.random()*3);
-
-    if(strengthA>strengthB){
-
-        goalsA=
-            Math.max(
-                goalsA,
-                Math.floor(Math.random()*3)
-            );
-
-    }else{
-
-        goalsB=
-            Math.max(
-                goalsB,
-                Math.floor(Math.random()*3)
-            );
-
     }
-
-    let starterChance=
-        (
-            player.ovr+
-            player.form+
-            player.coachRelation
-        )/3;
-
-    let minutes;
-
-    if(starterChance>=60){
-
-        minutes=
-            Math.floor(Math.random()*31)+60;
-
-        player.stats.starts++;
-
-    }else{
-
-        minutes=
-            Math.floor(Math.random()*46);
-
-        player.stats.bench++;
-
-    }
-
-    if(minutes<10){
-
-        minutes=0;
-
-    }
-
-    if(minutes>0){
-
-        player.stats.matches++;
-
-        player.stats.mins+=minutes;
-
-        let attackChance;
-
-        if(player.position==="Napastnik")
-            attackChance=
-                (player.ovr+player.form)/125;
-
-        else if(player.position==="Pomocnik")
-            attackChance=
-                (player.ovr+player.form)/180;
-
-        else if(player.position==="Obrońca")
-            attackChance=
-                (player.ovr+player.form)/270;
-
-        else
-            attackChance=
-                (player.ovr+player.form)/350;
-
-        if(
-            Math.random()<attackChance &&
-            minutes>=30
-        ){
-
-            player.stats.goals++;
-
-            goalsA++;
-
-        }
-
-        if(
-            Math.random()<attackChance*.7 &&
-            minutes>=30
-        ){
-
-            player.stats.assists++;
-
-        }
-
-    }
-
-    if(Math.random()<.06)
-        player.stats.yellow++;
-
-    if(Math.random()<.008)
-        player.stats.red++;
-
-    if(Math.random()<.025){
-
-        player.injury=
-            Math.floor(Math.random()*4)+1;
-
-    }
-
-    updateClubTable(
-        club,
-        opponent,
-        goalsA,
-        goalsB
-    );
-
-    world.lastMatch={
-        home:club.team,
-        away:opponent.team,
-        homeGoals:goalsA,
-        awayGoals:goalsB,
-        minutes:minutes
-    };
-
-    if(goalsA>goalsB){
-
-        player.form+=4;
-
-        addNews(
-            `${club.team} wygrał ${goalsA}:${goalsB} z ${opponent.team}.`
-        );
-
-    }else if(goalsA<goalsB){
-
-        player.form-=3;
-
-        addNews(
-            `${club.team} przegrał ${goalsA}:${goalsB} z ${opponent.team}.`
-        );
-
-    }else{
-
-        player.form+=1;
-
-        addNews(
-            `${club.team} zremisował ${goalsA}:${goalsB} z ${opponent.team}.`
-        );
-
-    }
-
-    clampStats();
-
-    advanceWeek();
-
 }
 
-
-/* =========================================================
-   TABELA – MECZ
-========================================================= */
-
-function updateClubTable(
-    club,
-    opponent,
-    goalsA,
-    goalsB
-){
-
-    club.played++;
-    opponent.played++;
-
-    club.gf+=goalsA;
-    club.ga+=goalsB;
-
-    opponent.gf+=goalsB;
-    opponent.ga+=goalsA;
-
-    if(goalsA>goalsB){
-
-        club.wins++;
-        club.points+=3;
-
-        opponent.losses++;
-
-    }else if(goalsA===goalsB){
-
-        club.draws++;
-        club.points++;
-
-        opponent.draws++;
-        opponent.points++;
-
-    }else{
-
-        club.losses++;
-
-        opponent.wins++;
-        opponent.points+=3;
-
-    }
-
+function random(min, max) {
+    return Math.floor(
+        Math.random() * (max - min + 1)
+    ) + min;
 }
 
-
-function getRandomOpponent(
-    league,
-    exclude
-){
-
-    let teams=
-        Object.values(world.tables[league])
-        .filter(x=>x.team!==exclude);
-
-    return teams[
-        Math.floor(Math.random()*teams.length)
-    ];
-
-}
-
-
-/* =========================================================
-   TYDZIEŃ
-========================================================= */
-
-function advanceWeek(){
-
-    player.money+=
-        Math.round(player.club.wage/4);
-
-    player.value=
-        getPlayerValue();
-
-    if(
-        Math.random()<.12 &&
-        player.ovr>=60
-    ){
-
-        checkNationalTeam();
-
-    }
-
-    if(
-        Math.random()<.04
-    ){
-
-        player.reputation+=2;
-
-        addNews(
-            "Media coraz częściej piszą o Twoich występach."
-        );
-
-    }
-
-    let weeks=
-        getSeasonWeeks();
-
-    if(player.stats.matches>=weeks){
-
-        finishSeason();
-
-    }else{
-
-        updateUI();
-
-        setTimeout(
-            ()=>nextDecision(),
-            150
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   SEZON
-========================================================= */
-
-function getSeasonWeeks(){
-
-    return 12;
-
-}
-
-
-/*
-    Zamiast kilkudziesięciu kliknięć
-    jeden sezon ma 12 głównych decyzji.
-*/
-
-function finishSeason(){
-
-    let table=
-        getSortedTable(player.league);
-
-    let position=
-        table.findIndex(
-            x=>x.team===player.club.name
-        )+1;
-
-    let oldOVR=
-        player.ovr;
-
-    if(player.form>=75)
-        player.ovr+=
-            Math.floor(Math.random()*3)+1;
-
-    else if(player.form<35)
-        player.ovr--;
-
-    player.ovr=
-        Math.max(
-            30,
-            Math.min(99,player.ovr)
-        );
-
-    let bonus=
-        Math.max(
-            0,
-            (20-position)*1000
-        );
-
-    player.money+=bonus;
-
-    player.career.totalMatches+=
-        player.stats.matches;
-
-    player.career.totalGoals+=
-        player.stats.goals;
-
-    player.career.totalAssists+=
-        player.stats.assists;
-
-    player.career.seasons++;
-
-    player.history.push({
-
-        year:player.currentYear,
-
-        club:player.club.name,
-
-        league:player.league,
-
-        position:position,
-
-        ovr:player.ovr,
-
-        matches:player.stats.matches,
-
-        goals:player.stats.goals,
-
-        assists:player.stats.assists
-
-    });
-
-    resolvePromotionRelegation();
-
-    addNews(
-        `Koniec sezonu. ${position}. miejsce. OVR ${oldOVR} → ${player.ovr}.`
-    );
-
-    if(bonus>0){
-
-        addNews(
-            `Otrzymujesz ${money(bonus)} premii za sezon.`
-        );
-
-    }
-
-    showSeasonEnd(position,bonus);
-
-}
-
-
-/* =========================================================
-   KONIEC SEZONU
-========================================================= */
-
-function showSeasonEnd(position,bonus){
-
-    let actions=document
-        .getElementById("eventChoices");
-
-    document
-        .getElementById("eventTag")
-        .innerText="KONIEC SEZONU";
-
-    document
-        .getElementById("eventTitle")
-        .innerText=
-            `🏁 Sezon ${player.currentYear} zakończony`;
-
-    document
-        .getElementById("eventDescription")
-        .innerHTML=
-            `
-            <b>${player.club.name}</b><br>
-            ${position}. miejsce w lidze<br><br>
-
-            Mecze: ${player.stats.matches}<br>
-            Gole: ${player.stats.goals}<br>
-            Asysty: ${player.stats.assists}<br>
-            Premia: ${money(bonus)}
-            `;
-
-    actions.innerHTML="";
-
-    let next=document.createElement("button");
-
-    next.className="choice";
-
-    next.innerHTML=`
-        <strong>🔄 Zostań w klubie</strong>
-        <small>Rozpocznij kolejny sezon.</small>
-    `;
-
-    next.onclick=()=>{
-
-        player.currentYear++;
-
-        player.contractYears--;
-
-        resetSeasonStats();
-
-        if(player.contractYears<=0){
-
-            showTransfers();
-
-        }else{
-
-            nextDecision();
-
-        }
-
-        updateUI();
-
-    };
-
-    actions.appendChild(next);
-
-
-    let transfer=document.createElement("button");
-
-    transfer.className="choice";
-
-    transfer.innerHTML=`
-        <strong>🔄 Sprawdź transfery</strong>
-        <small>Poszukaj nowego klubu.</small>
-    `;
-
-    transfer.onclick=()=>{
-
-        showTransfers();
-
-    };
-
-    actions.appendChild(transfer);
-
-}
-
-
-/* =========================================================
-   RESET SEZONU
-========================================================= */
-
-function resetSeasonStats(){
-
-    player.stats={
-        matches:0,
-        starts:0,
-        bench:0,
-        mins:0,
-        goals:0,
-        assists:0,
-        yellow:0,
-        red:0
-    };
-
-    player.form=55;
-
-}
-
-
-/* =========================================================
-   AWANSE / SPADKI
-========================================================= */
-
-function resolvePromotionRelegation(){
-
-    world.promotions=[];
-    world.relegations=[];
-
-    let extra=
-        getSortedTable("Ekstraklasa");
-
-    let liga1=
-        getSortedTable("1 Liga");
-
-    let liga2=
-        getSortedTable("2 Liga");
-
-    world.relegations.push(
-        ...extra.slice(-3).map(x=>x.team)
-    );
-
-    world.promotions.push(
-        ...liga1.slice(0,2).map(x=>x.team)
-    );
-
-    world.relegations.push(
-        ...liga1.slice(-3).map(x=>x.team)
-    );
-
-    world.promotions.push(
-        ...liga2.slice(0,2).map(x=>x.team)
-    );
-
-    world.relegations.push(
-        ...liga2.slice(-2).map(x=>x.team)
-    );
-
-}
-
-
-/* =========================================================
-   SORTOWANIE TABELI
-========================================================= */
-
-function getSortedTable(league){
-
-    return Object.values(world.tables[league])
-        .sort((a,b)=>{
-
-            if(b.points!==a.points)
-                return b.points-a.points;
-
-            let gdB=b.gf-b.ga;
-            let gdA=a.gf-a.ga;
-
-            return gdB-gdA;
-
-        });
-
-}
-
-
-/* =========================================================
-   RENDER TABELI
-========================================================= */
-
-function renderTable(){
-
-    if(!player.league)
-        return;
-
-    let league=
-        document.getElementById("leagueSelect")
-        .value;
-
-    let table=
-        getSortedTable(league);
-
-    let html="";
-
-    table.forEach((team,index)=>{
-
-        let status="";
-
-        if(index===0)
-            status="🏆";
-
-        else if(
-            league!=="Ekstraklasa" &&
-            index<2
-        )
-            status="🟢";
-
-        else if(
-            index>=table.length-3
-        )
-            status="🔴";
-
-        else if(
-            index>=table.length-5
-        )
-            status="🟡";
-
-        let mine=
-            team.team===player.club?.name;
-
-        html+=`
-
-        <div class="
-            clubRow
-            ${mine?"myClub":""}
-        ">
-
-            <div class="position">
-                ${status} ${index+1}
-            </div>
-
-            <div>
-
-                <div class="clubName">
-                    ${team.team}
-                    ${
-                        mine
-                        ? `<span class="badge green">
-                            TWÓJ KLUB
-                           </span>`
-                        :""
-                    }
-                </div>
-
-                <div class="clubMeta">
-                    OVR ${team.ovr}
-                    • ${team.wins}W
-                    • ${team.draws}R
-                    • ${team.losses}P
-                    • ${team.gf}:${team.ga}
-                </div>
-
-            </div>
-
-            <div class="clubPoints">
-                ${team.points}
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
-    document
-        .getElementById("tableContainer")
-        .innerHTML=html;
-
-}
-
-
-/* =========================================================
-   KLUB
-========================================================= */
-
-function renderClubStats(){
-
-    if(!player.club)
-        return;
-
-    let table=
-        getSortedTable(player.league);
-
-    let club=
-        world.tables[player.league][player.club.name];
-
-    let pos=
-        table.findIndex(
-            x=>x.team===player.club.name
-        )+1;
-
-    document
-        .getElementById("clubPosition")
-        .innerText=pos+".";
-
-    document
-        .getElementById("clubStats")
-        .innerHTML=`
-
-        <div class="stats">
-
-            <div class="stat">
-                <small>Mecze</small>
-                <b>${club.played}</b>
-            </div>
-
-            <div class="stat">
-                <small>Punkty</small>
-                <b>${club.points}</b>
-            </div>
-
-            <div class="stat">
-                <small>Zwycięstwa</small>
-                <b>${club.wins}</b>
-            </div>
-
-            <div class="stat">
-                <small>Bilans</small>
-                <b>${club.gf}:${club.ga}</b>
-            </div>
-
-        </div>
-
-        `;
-
-}
-
-
-/* =========================================================
-   OSTATNI MECZ
-========================================================= */
-
-function renderLastMatch(){
-
-    let m=world.lastMatch;
-
-    document
-        .getElementById("lastMatchBadge")
-        .innerText=
-            m.homeGoals===m.awayGoals
-            ?"REMIS"
-            :m.homeGoals>m.awayGoals
-            ?"ZWYCIĘSTWO"
-            :"PORAŻKA";
-
-    document
-        .getElementById("lastMatch")
-        .innerHTML=`
-
-        <div class="match">
-
-            <div>
-                <b>${m.home}</b>
-            </div>
-
-            <div class="score">
-                ${m.homeGoals}:${m.awayGoals}
-            </div>
-
-            <div>
-                <b>${m.away}</b>
-            </div>
-
-        </div>
-
-        <div class="muted small">
-            Twój czas gry: ${m.minutes}'
-        </div>
-
-        `;
-
-}
-
-
-/* =========================================================
-   TRANSFERY
-========================================================= */
-
-function showTransfers(){
-
-    openModal(`
-        <h2>🔄 Okno transferowe</h2>
-
-        <p class="muted">
-            Dostępne kluby zależą od Twojego OVR
-            i reputacji.
-        </p>
-
-        <div id="transferOffers"></div>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()"
-        >
-            ↩️ Wróć
-        </button>
-    `);
-
-    generateTransferOffers();
-
-}
-
-
-function generateTransferOffers(){
-
-    let box=
-        document.getElementById("transferOffers");
-
-    let offers=[];
-
-    Object.keys(world.tables)
-    .forEach(league=>{
-
-        Object.values(world.tables[league])
-        .forEach(team=>{
-
-            if(
-                team.team===player.club?.name
-            )
-                return;
-
-            let diff=
-                team.ovr-player.ovr;
-
-            if(
-                player.ovr>=team.ovr-7 &&
-                player.ovr<=team.ovr+6 &&
-                Math.random()<.65
-            ){
-
-                offers.push({
-
-                    team:team.team,
-                    league:league,
-                    ovr:team.ovr,
-                    wage:Math.round(
-                        team.wage*
-                        (
-                            1+
-                            player.reputation/300
-                        )
-                    )
-
-                });
-
-            }
-
-        });
-
-    });
-
-    offers.sort(()=>Math.random()-.5);
-
-    offers=offers.slice(0,5);
-
-    if(!offers.length){
-
-        box.innerHTML=`
-            <div class="card">
-                ❌ Brak konkretnych ofert.
-            </div>
-        `;
-
-        return;
-
-    }
-
-    box.innerHTML=
-        offers.map(o=>`
-
-        <div class="transfer">
-
-            <h3>${o.team}</h3>
-
-            <div class="muted">
-                ${o.league} • OVR ${o.ovr}
-            </div>
-
-            <p class="money">
-                ${money(o.wage)} / mies.
-            </p>
-
-            <button
-                class="btn"
-                onclick='acceptTransfer(${JSON.stringify(o)})'
-            >
-                ✍️ PODPISZ KONTRAKT
-            </button>
-
-        </div>
-
-        `).join("");
-
-}
-
-
-function acceptTransfer(o){
-
-    player.club={
-        name:o.team,
-        wage:o.wage,
-        ovr:o.ovr
-    };
-
-    player.league=o.league;
-
-    player.contractYears=3;
-
-    player.form+=5;
-
-    player.coachRelation=50;
-
-    player.reputation+=5;
-
-    addNews(
-        `Transfer! Podpisałeś kontrakt z ${o.team}.`
-    );
-
-    clampStats();
-
-    closeModal();
-
-    updateUI();
-
-    nextDecision();
-
-}
-
-
-/* =========================================================
-   REPREZENTACJA
-========================================================= */
-
-function checkNationalTeam(){
-
-    let age=
-        player.currentYear-player.birthYear;
-
-    let level=null;
-
-    if(
-        age<=19 &&
-        player.ovr>=55
-    )
-        level="U-19";
-
-    if(
-        age>=20 &&
-        age<=21 &&
-        player.ovr>=62
-    )
-        level="U-21";
-
-    if(
-        age>=18 &&
-        player.ovr>=72 &&
-        player.form>=55
-    )
-        level="SENIOR";
-
-    if(
-        level &&
-        (
-            !player.national.level ||
-            player.national.level!==level
-        )
-    ){
-
-        player.national.level=level;
-
-        addNews(
-            `Powołanie do reprezentacji ${level}! 🇵🇱`
-        );
-
-        showNationalCall(level);
-
-    }
-
-}
-
-
-function showNationalCall(level){
-
-    openModal(`
-
-        <div class="center">
-
-            <div style="font-size:55px">
-                🇵🇱
-            </div>
-
-            <h1>POWOŁANIE!</h1>
-
-            <p>
-                Zostałeś powołany do
-                <b>reprezentacji ${level}</b>.
-            </p>
-
-            <div class="stats">
-
-                <div class="stat">
-                    <small>OVR</small>
-                    <b>${player.ovr}</b>
-                </div>
-
-                <div class="stat">
-                    <small>Forma</small>
-                    <b>${player.form}</b>
-                </div>
-
-            </div>
-
-            <button
-                class="btn"
-                onclick="nationalMatch()"
-            >
-                🇵🇱 ROZEGRAJ MECZ
-            </button>
-
-        </div>
-
-    `);
-
-}
-
-
-function nationalMatch(){
-
-    let opponents=
-        Object.keys(countries)
-        .filter(x=>x!=="Polska");
-
-    let opponent=
-        opponents[
-            Math.floor(
-                Math.random()*opponents.length
-            )
-        ];
-
-    let poland=
-        Math.floor(Math.random()*4);
-
-    let other=
-        Math.floor(Math.random()*3);
-
-    let minutes=
-        Math.floor(Math.random()*35)+55;
-
-    let impact=
-        (player.ovr+player.form)/220;
-
-    let goal=
-        Math.random()<impact*.25;
-
-    let assist=
-        Math.random()<impact*.3;
-
-    player.national.caps++;
-
-    if(goal)
-        player.national.goals++;
-
-    if(assist)
-        player.national.assists++;
-
-    addNews(
-        `🇵🇱 Polska ${poland}:${other} ${opponent}.`
-    );
-
-    openModal(`
-
-        <div class="center">
-
-            <div style="font-size:50px">
-                🇵🇱
-            </div>
-
-            <h2>REPREZENTACJA POLSKI</h2>
-
-            <div class="bigNumber">
-                ${poland}:${other}
-            </div>
-
-            <p>
-                Polska vs
-                ${countries[opponent]?.flag||"🌍"}
-                ${opponent}
-            </p>
-
-            <div class="card">
-
-                Zagrałeś:
-                <b>${minutes}'</b>
-
-                ${
-                    goal
-                    ? "<br>⚽ STRZELIŁEŚ GOLA!"
-                    :""
-                }
-
-                ${
-                    assist
-                    ? "<br>🎯 ZALICZYŁEŚ ASYSTĘ!"
-                    :""
-                }
-
-            </div>
-
-            <button
-                class="btn"
-                onclick="closeModal()"
-            >
-                WRÓĆ
-            </button>
-
-        </div>
-
-    `);
-
-}
-
-
-/* =========================================================
-   RANKING FIFA
-========================================================= */
-
-function showCountries(){
-
-    let arr=
-        Object.entries(countries)
-        .sort(
-            (a,b)=>b[1].ovr-a[1].ovr
-        );
-
-    openModal(`
-
-        <h2>🌍 Ranking FIFA</h2>
-
-        <div class="card">
-
-            ${arr.map((c,i)=>`
-
-                <div class="country">
-
-                    <span>
-                        ${i+1}.
-                        ${c[1].flag}
-                        ${c[0]}
-                    </span>
-
-                    <b>${c[1].ovr}</b>
-
-                </div>
-
-            `).join("")}
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()"
-        >
-            Wróć
-        </button>
-
-    `);
-
-}
-
-
-/* =========================================================
-   HISTORIA
-========================================================= */
-
-function showHistory(){
-
-    let history=player.history||[];
-
-    openModal(`
-
-        <h2>📖 Historia kariery</h2>
-
-        <div class="card">
-
-            <div class="stats">
-
-                <div class="stat">
-                    <small>Sezony</small>
-                    <b>${player.career.seasons}</b>
-                </div>
-
-                <div class="stat">
-                    <small>Mecze</small>
-                    <b>${player.career.totalMatches}</b>
-                </div>
-
-                <div class="stat">
-                    <small>Gole</small>
-                    <b>${player.career.totalGoals}</b>
-                </div>
-
-                <div class="stat">
-                    <small>Asysty</small>
-                    <b>${player.career.totalAssists}</b>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            ${
-                history.length
-                ?
-                history.slice().reverse().map(h=>`
-
-                    <div class="historyRow">
-
-                        <b>
-                            ${h.year}
-                            •
-                            ${h.club}
-                        </b>
-
-                        <div class="muted small">
-
-                            ${h.league}
-                            •
-                            ${h.position}. miejsce
-                            •
-                            OVR ${h.ovr}
-
-                            <br>
-
-                            ⚽ ${h.goals}
-                            •
-                            🎯 ${h.assists}
-                            •
-                            ⚽ Mecze ${h.matches}
-
-                        </div>
-
-                    </div>
-
-                `).join("")
-                :
-                `
-                    <p class="muted">
-                        Historia pojawi się po zakończeniu
-                        pierwszego sezonu.
-                    </p>
-                `
-            }
-
-        </div>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()"
-        >
-            Wróć
-        </button>
-
-    `);
-
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-function openModal(html){
-
-    document
-        .getElementById("modalContent")
-        .innerHTML=html;
-
-    document
-        .getElementById("modal")
-        .classList.add("show");
-
-}
-
-
-function closeModal(){
-
-    document
-        .getElementById("modal")
-        .classList.remove("show");
-
-}
-
-
-document
-    .getElementById("modal")
-    .addEventListener(
-        "click",
-        e=>{
-
-            if(e.target.id==="modal")
-                closeModal();
-
-        }
-    );
-
-
-/* =========================================================
-   SAVE
-========================================================= */
-
-function saveGame(){
-
-    localStorage.setItem(
-        "FPS_FOOTBALL_PRO_SAVE",
-        JSON.stringify({
-            player:player,
-            world:world
-        })
-    );
-
-    alert(
-        "✅ Kariera została zapisana!"
-    );
-
-}
-
-
-/* =========================================================
-   LOAD
-========================================================= */
-
-function loadGame(){
-
-    let saved=
-        localStorage.getItem(
-            "FPS_FOOTBALL_PRO_SAVE"
-        );
-
-    if(!saved){
-
-        alert(
-            "❌ Nie znaleziono zapisanej kariery."
-        );
-
-        return;
-
-    }
-
-    try{
-
-        let data=
-            JSON.parse(saved);
-
-        player=data.player;
-        world=data.world;
-
-        document
-            .getElementById("nav")
-            .style.display="grid";
-
-        showScreen("careerScreen");
-
-        updateUI();
-
-        nextDecision();
-
-    }catch(e){
-
-        alert(
-            "❌ Zapis jest uszkodzony."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function resetGame(){
-
-    if(
-        confirm(
-            "Czy na pewno chcesz usunąć całą karierę?"
-        )
-    ){
-
-        localStorage.removeItem(
-            "FPS_FOOTBALL_PRO_SAVE"
-        );
-
-        location.reload();
-
-    }
-
-}
+update();
 
 </script>
 
