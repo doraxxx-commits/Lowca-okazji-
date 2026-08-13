@@ -1,317 +1,2116 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polski Piłkarz Simulator PRO</title>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 700px; margin: 0 auto; background: #1e1e1e; border-radius: 12px; border: 1px solid #333; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-        .header { background: #1b4332; color: white; padding: 20px; text-align: center; border-bottom: 2px solid #2d6a4f; }
-        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
-        .content { padding: 20px; }
-        .card { border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #252525; }
-        .card.offer { border-left: 5px solid #2d6a4f; background: #1b2e24; }
-        button { background: #2d6a4f; color: white; border: none; padding: 12px 18px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; margin-top: 8px; font-weight: 700; transition: 0.2s; }
-        button:hover { background: #40916c; }
-        button.alt { background: #3a3a3a; }
-        button.alt:hover { background: #555; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: #2a2a2a; padding: 12px; border-radius: 8px; font-size: 13px; }
-        select, input { width: 100%; padding: 10px; margin: 6px 0 16px; border-radius: 6px; border: 1px solid #444; background: #121212; color: white; box-sizing: border-box; }
-        .hidden { display: none; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; background: #2b6cb0; }
-        .season-stats { background: #181818; padding: 10px; border-radius: 6px; margin-top: 10px; border: 1px solid #282828; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polski Piłkarz Simulator PRO</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #101010;
+    color: #e8e8e8;
+    margin: 0;
+    padding: 15px;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    background: #1b1b1b;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #333;
+    box-shadow: 0 10px 35px rgba(0,0,0,.55);
+}
+
+.header {
+    background: linear-gradient(135deg,#1b4332,#081c15);
+    padding: 22px;
+    text-align: center;
+    border-bottom: 2px solid #2d6a4f;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 23px;
+}
+
+.header small {
+    display:block;
+    margin-top:6px;
+    opacity:.7;
+}
+
+.content {
+    padding: 18px;
+}
+
+.card {
+    background:#242424;
+    border:1px solid #363636;
+    border-radius:9px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.offer {
+    border-left:5px solid #2d6a4f;
+    background:#1b2c23;
+}
+
+.stats-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    background:#252525;
+    padding:12px;
+    border-radius:9px;
+    margin-bottom:12px;
+    font-size:13px;
+}
+
+.stat {
+    padding:7px;
+    border-bottom:1px solid #333;
+}
+
+button {
+    width:100%;
+    background:#2d6a4f;
+    color:white;
+    border:0;
+    border-radius:7px;
+    padding:11px;
+    margin-top:7px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    transition:.2s;
+}
+
+button:hover {
+    background:#40916c;
+}
+
+button.alt {
+    background:#3b3b3b;
+}
+
+button.danger {
+    background:#8b2c2c;
+}
+
+button.blue {
+    background:#28527a;
+}
+
+button.gold {
+    background:#806b22;
+}
+
+input,select {
+    width:100%;
+    background:#111;
+    border:1px solid #444;
+    color:white;
+    padding:10px;
+    border-radius:6px;
+    margin:6px 0 14px;
+}
+
+.hidden {
+    display:none;
+}
+
+.badge {
+    display:inline-block;
+    padding:3px 8px;
+    border-radius:5px;
+    background:#2869a0;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.green {
+    color:#5ee28a;
+}
+
+.red {
+    color:#ff6b6b;
+}
+
+.yellow {
+    color:#e6c75a;
+}
+
+.tabs {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
+    margin-bottom:12px;
+}
+
+.tabs button {
+    margin:0;
+    font-size:12px;
+    padding:9px 4px;
+}
+
+.table-wrap {
+    overflow-x:auto;
+}
+
+table {
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+}
+
+th,td {
+    padding:7px 5px;
+    border-bottom:1px solid #333;
+    text-align:center;
+}
+
+th {
+    background:#303030;
+}
+
+tr.user-team {
+    background:#193c2b;
+    font-weight:bold;
+}
+
+.event-title {
+    margin-top:0;
+}
+
+.choice {
+    text-align:left;
+}
+
+.news {
+    padding:9px;
+    border-left:3px solid #2d6a4f;
+    background:#1c1c1c;
+    margin:6px 0;
+    border-radius:4px;
+}
+
+.progress {
+    height:8px;
+    background:#111;
+    border-radius:5px;
+    overflow:hidden;
+    margin-top:5px;
+}
+
+.progress div {
+    height:100%;
+    background:#40916c;
+}
+
+.big-number {
+    font-size:28px;
+    font-weight:bold;
+}
+
+@media(max-width:600px) {
+    .stats-grid {
+        grid-template-columns:1fr;
+    }
+
+    .tabs {
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    body {
+        padding:5px;
+    }
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>POLSKI PIŁKARZ SIMULATOR</h1>
-    </div>
-    
-    <div class="content">
-        <!-- KREATOR POSTACI -->
-        <div id="screen-creation">
-            <h3>Kreator Zawodnika</h3>
-            <label>Imię i Nazwisko:</label>
-            <input type="text" id="input-name" value="Zbigniew Mandziejewicz">
-            
-            <label>Rok Urodzenia (Aktualny rok: 2026):</label>
-            <input type="number" id="input-birthyear" value="2008" min="1980" max="2012">
 
-            <label>Pozycja:</label>
-            <select id="input-position">
-                <option value="Napastnik">Napastnik</option>
-                <option value="Pomocnik">Pomocnik</option>
-                <option value="Obrońca">Obrońca</option>
-                <option value="Bramkarz">Bramkarz</option>
-            </select>
-
-            <label>Punkt startowy (Poziom umiejętności):</label>
-            <select id="input-start-ovr">
-                <option value="40">B-klasowy wyjadacz (40 OVR)</option>
-                <option value="48" selected>Normalny chłop (48 OVR)</option>
-                <option value="55">Puchar Syrenki (55 OVR)</option>
-                <option value="63">Wonderkid (63 OVR)</option>
-            </select>
-
-            <button onclick="startGame()">Rozpocznij Karierę</button>
-            <button class="alt" onclick="loadGame()">Wczytaj Zapis</button>
-        </div>
-
-        <!-- EKRAN ROZGRYWKI -->
-        <div id="screen-game" class="hidden">
-            <div class="stats-grid">
-                <div><strong>Zawodnik:</strong> <span id="stat-name"></span></div>
-                <div><strong>Rok urodzenia:</strong> <span id="stat-birth"></span> (<span id="stat-age"></span> lat)</div>
-                <div><strong>Klub:</strong> <span id="stat-club">Bez klubu</span></div>
-                <div><strong>Liga:</strong> <span id="stat-league">-</span></div>
-                <div><strong>Umiejętności (OVR):</strong> <span id="stat-ovr"></span></div>
-                <div><strong>Forma:</strong> <span id="stat-form"></span>/100</div>
-                <div><strong>Konto:</strong> <span id="stat-money"></span> PLN</div>
-                <div><strong>Sezon:</strong> <span id="stat-year">2026</span></div>
-            </div>
-
-            <div class="season-stats">
-                <strong>Statystyki Obecnego Sezonu:</strong><br>
-                Mecze: <span id="stat-matches">0</span> | Minuty: <span id="stat-mins">0</span>' | Bramki: <span id="stat-goals">0</span> | Asysty: <span id="stat-assists">0</span>
-            </div>
-            <br>
-
-            <div id="event-box" class="card">
-                <h4 id="event-title">---</h4>
-                <p id="event-desc">---</p>
-                <div id="event-actions"></div>
-            </div>
-
-            <button class="alt" onclick="saveGame()">Zapisz Stan Gry</button>
-        </div>
-    </div>
+<div class="header">
+    <h1>🇵🇱 POLSKI PIŁKARZ SIMULATOR PRO</h1>
+    <small>Kariera • Transfery • Ligi • Baraże • Reprezentacja</small>
 </div>
 
+<div class="content">
+
+<!-- ================= KREATOR ================= -->
+
+<div id="screen-creation">
+
+<h3>👤 Kreator zawodnika</h3>
+
+<label>Imię i nazwisko</label>
+<input id="input-name" value="Zbigniew Mandziejewicz">
+
+<label>Rok urodzenia</label>
+<input id="input-birthyear" type="number" value="2008" min="1980" max="2010">
+
+<label>Pozycja</label>
+<select id="input-position">
+<option>Napastnik</option>
+<option>Pomocnik</option>
+<option>Obrońca</option>
+<option>Bramkarz</option>
+</select>
+
+<label>Poziom startowy</label>
+<select id="input-start-ovr">
+<option value="40">B-klasowy wyjadacz — 40 OVR</option>
+<option value="48" selected>Normalny zawodnik — 48 OVR</option>
+<option value="55">Puchar Syrenki — 55 OVR</option>
+<option value="63">Wonderkid — 63 OVR</option>
+</select>
+
+<button onclick="startGame()">🚀 Rozpocznij karierę</button>
+<button class="alt" onclick="loadGame()">💾 Wczytaj zapis</button>
+
+</div>
+
+
+<!-- ================= GRA ================= -->
+
+<div id="screen-game" class="hidden">
+
+<div class="stats-grid">
+
+<div class="stat">
+<strong>👤 Zawodnik</strong><br>
+<span id="stat-name"></span>
+</div>
+
+<div class="stat">
+<strong>🎂 Wiek</strong><br>
+<span id="stat-age"></span>
+</div>
+
+<div class="stat">
+<strong>🏟️ Klub</strong><br>
+<span id="stat-club"></span>
+</div>
+
+<div class="stat">
+<strong>🏆 Liga</strong><br>
+<span id="stat-league"></span>
+</div>
+
+<div class="stat">
+<strong>⭐ OVR</strong><br>
+<span id="stat-ovr"></span>
+</div>
+
+<div class="stat">
+<strong>🔥 Forma</strong><br>
+<span id="stat-form"></span>/100
+</div>
+
+<div class="stat">
+<strong>💰 Konto</strong><br>
+<span id="stat-money"></span> PLN
+</div>
+
+<div class="stat">
+<strong>📅 Sezon</strong><br>
+<span id="stat-year"></span>
+</div>
+
+<div class="stat">
+<strong>🎯 Reputacja</strong><br>
+<span id="stat-reputation"></span>/100
+</div>
+
+<div class="stat">
+<strong>👔 Trener</strong><br>
+<span id="stat-coach"></span>/100
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="tabs">
+
+<button onclick="showPanel('main')">🏠 Kariera</button>
+<button onclick="showPanel('table')">📊 Tabela</button>
+<button onclick="showPanel('stats')">⚽ Statystyki</button>
+<button onclick="showPanel('world')">🌍 Świat</button>
+
+</div>
+
+<div id="panel-main">
+
+<div class="season-stats">
+
+<strong>📈 Ten sezon</strong><br><br>
+
+Mecze:
+<span id="stat-matches">0</span>
+&nbsp; | &nbsp;
+
+Minuty:
+<span id="stat-mins">0</span>
+&nbsp; | &nbsp;
+
+⚽
+<span id="stat-goals">0</span>
+&nbsp; | &nbsp;
+
+🎯
+<span id="stat-assists">0</span>
+
+</div>
+
+</div>
+
+
+<div id="panel-table" class="hidden">
+
+<h3>🏆 Tabela ligowa</h3>
+
+<div id="league-table"></div>
+
+</div>
+
+
+<div id="panel-stats" class="hidden">
+
+<h3>📊 Twoje statystyki</h3>
+
+<div id="career-stats"></div>
+
+</div>
+
+
+<div id="panel-world" class="hidden">
+
+<h3>🌍 Informacje</h3>
+
+<div id="world-info"></div>
+
+</div>
+
+</div>
+
+
+<!-- EVENT -->
+
+<div class="card">
+
+<h3 id="event-title" class="event-title">---</h3>
+
+<p id="event-desc">---</p>
+
+<div id="event-actions"></div>
+
+</div>
+
+
+<button class="alt" onclick="saveGame()">💾 Zapisz karierę</button>
+<button class="danger" onclick="resetGame()">🗑️ Usuń zapis</button>
+
+</div>
+
+</div>
+</div>
+
+
 <script>
+
 const CURRENT_SIM_YEAR = 2026;
 
-const CLUBS_DATABASE = {
-    "Ekstraklasa": [
-        { name: "Legia Warszawa", minOvr: 76, wage: 65000 }, { name: "Lech Poznań", minOvr: 75, wage: 60000 },
-        { name: "Raków Częstochowa", minOvr: 74, wage: 55000 }, { name: "Jagiellonia Białystok", minOvr: 73, wage: 50000 },
-        { name: "Pogoń Szczecin", minOvr: 72, wage: 45000 }, { name: "Górnik Zabrze", minOvr: 71, wage: 38000 },
-        { name: "Widzew Łódź", minOvr: 70, wage: 35000 }, { name: "Cracovia", minOvr: 69, wage: 32000 },
-        { name: "GKS Katowice", minOvr: 68, wage: 28000 }, { name: "Piast Gliwice", minOvr: 68, wage: 27000 },
-        { name: "Zagłębie Lubin", minOvr: 67, wage: 26000 }, { name: "Motor Lublin", minOvr: 66, wage: 24000 },
-        { name: "Radomiak Radom", minOvr: 66, wage: 23000 }, { name: "Korona Kielce", minOvr: 65, wage: 21000 },
-        { name: "Lechia Gdańsk", minOvr: 65, wage: 20000 }, { name: "Wisła Płock", minOvr: 64, wage: 19000 },
-        { name: "Arka Gdynia", minOvr: 64, wage: 18000 }, { name: "Bruk-Bet Termalica", minOvr: 63, wage: 17000 }
-    ],
-    "1 Liga": [
-        { name: "Wisła Kraków", minOvr: 63, wage: 22000 }, { name: "Śląsk Wrocław", minOvr: 62, wage: 19000 },
-        { name: "Ruch Chorzów", minOvr: 61, wage: 16000 }, { name: "Miedź Legnica", minOvr: 60, wage: 14000 },
-        { name: "Wieczysta Kraków", minOvr: 60, wage: 18000 }, { name: "ŁKS Łódź", minOvr: 59, wage: 13000 },
-        { name: "Stal Mielec", minOvr: 59, wage: 12000 }, { name: "Polonia Warszawa", minOvr: 58, wage: 11000 },
-        { name: "Puszcza Niepołomice", minOvr: 58, wage: 10500 }, { name: "Odra Opole", minOvr: 57, wage: 9500 },
-        { name: "Chrobry Głogów", minOvr: 56, wage: 9000 }, { name: "Stal Rzeszów", minOvr: 56, wage: 8500 },
-        { name: "Pogoń Grodzisk Maz.", minOvr: 55, wage: 8000 }, { name: "Polonia Bytom", minOvr: 55, wage: 7800 },
-        { name: "Warta Poznań", minOvr: 54, wage: 7500 }, { name: "Pogoń Siedlce", minOvr: 53, wage: 7000 },
-        { name: "Znicz Pruszków", minOvr: 53, wage: 6800 }, { name: "Unia Skierniewice", minOvr: 52, wage: 6500 }
-    ],
-    "2 Liga": [
-        { name: "Avia Świdnik", minOvr: 52, wage: 6000 }, { name: "GKS Tychy", minOvr: 52, wage: 6200 },
-        { name: "Podbeskidzie", minOvr: 51, wage: 5800 }, { name: "Hutnik Kraków", minOvr: 50, wage: 5200 },
-        { name: "Resovia Rzeszów", minOvr: 50, wage: 5000 }, { name: "Zawisza Bydgoszcz", minOvr: 49, wage: 4600 },
-        { name: "Chojniczanka", minOvr: 48, wage: 4300 }, { name: "Górnik Łęczna", minOvr: 48, wage: 4200 },
-        { name: "Stal Stalowa Wola", minOvr: 47, wage: 3900 }, { name: "Sandecja Nowy Sącz", minOvr: 46, wage: 3600 },
-        { name: "Lechia Zielona Góra", minOvr: 45, wage: 3400 }, { name: "Olimpia Grudziądz", minOvr: 44, wage: 3100 },
-        { name: "Rekord Bielsko-Biała", minOvr: 43, wage: 2900 }, { name: "Podhale Nowy Targ", minOvr: 42, wage: 2700 },
-        { name: "Świt Szczecin", minOvr: 41, wage: 2500 }, { name: "Sokół Kleczew", minOvr: 40, wage: 2200 },
-        { name: "Śląsk II Wrocław", minOvr: 38, wage: 1900 }, { name: "Legia II Warszawa", minOvr: 35, wage: 1600 }
+
+/* =========================================================
+   BAZY LIG
+========================================================= */
+
+const LEAGUES = {
+
+"Ekstraklasa": {
+    level:1,
+    teams:[
+        "Legia Warszawa",
+        "Lech Poznań",
+        "Raków Częstochowa",
+        "Jagiellonia Białystok",
+        "Pogoń Szczecin",
+        "Górnik Zabrze",
+        "Widzew Łódź",
+        "Cracovia",
+        "GKS Katowice",
+        "Piast Gliwice",
+        "Zagłębie Lubin",
+        "Motor Lublin",
+        "Radomiak Radom",
+        "Korona Kielce",
+        "Lechia Gdańsk",
+        "Wisła Płock",
+        "Arka Gdynia",
+        "Bruk-Bet Termalica"
     ]
+},
+
+"1 Liga": {
+    level:2,
+    teams:[
+        "Wisła Kraków",
+        "Śląsk Wrocław",
+        "Ruch Chorzów",
+        "Miedź Legnica",
+        "Wieczysta Kraków",
+        "ŁKS Łódź",
+        "Stal Mielec",
+        "Polonia Warszawa",
+        "Puszcza Niepołomice",
+        "Odra Opole",
+        "Chrobry Głogów",
+        "Stal Rzeszów",
+        "Pogoń Grodzisk Maz.",
+        "Polonia Bytom",
+        "Warta Poznań",
+        "Pogoń Siedlce",
+        "Znicz Pruszków",
+        "Unia Skierniewice"
+    ]
+},
+
+"2 Liga": {
+    level:3,
+    teams:[
+        "Avia Świdnik",
+        "GKS Tychy",
+        "Podbeskidzie",
+        "Hutnik Kraków",
+        "Resovia Rzeszów",
+        "Zawisza Bydgoszcz",
+        "Chojniczanka",
+        "Górnik Łęczna",
+        "Stal Stalowa Wola",
+        "Sandecja Nowy Sącz",
+        "Lechia Zielona Góra",
+        "Olimpia Grudziądz",
+        "Rekord Bielsko-Biała",
+        "Podhale Nowy Targ",
+        "Świt Szczecin",
+        "Sokół Kleczew",
+        "Śląsk II Wrocław",
+        "Legia II Warszawa"
+    ]
+}
+
 };
+
+
+/* =========================================================
+   OVR KLUBÓW
+========================================================= */
+
+const BASE_OVR = {
+
+"Legia Warszawa":76,
+"Lech Poznań":75,
+"Raków Częstochowa":74,
+"Jagiellonia Białystok":73,
+"Pogoń Szczecin":72,
+"Górnik Zabrze":71,
+"Widzew Łódź":70,
+"Cracovia":69,
+"GKS Katowice":68,
+"Piast Gliwice":68,
+"Zagłębie Lubin":67,
+"Motor Lublin":66,
+"Radomiak Radom":66,
+"Korona Kielce":65,
+"Lechia Gdańsk":65,
+"Wisła Płock":64,
+"Arka Gdynia":64,
+"Bruk-Bet Termalica":63,
+
+"Wisła Kraków":63,
+"Śląsk Wrocław":62,
+"Ruch Chorzów":61,
+"Miedź Legnica":60,
+"Wieczysta Kraków":60,
+"ŁKS Łódź":59,
+"Stal Mielec":59,
+"Polonia Warszawa":58,
+"Puszcza Niepołomice":58,
+"Odra Opole":57,
+"Chrobry Głogów":56,
+"Stal Rzeszów":56,
+"Pogoń Grodzisk Maz.":55,
+"Polonia Bytom":55,
+"Warta Poznań":54,
+"Pogoń Siedlce":53,
+"Znicz Pruszków":53,
+"Unia Skierniewice":52,
+
+"Avia Świdnik":52,
+"GKS Tychy":52,
+"Podbeskidzie":51,
+"Hutnik Kraków":50,
+"Resovia Rzeszów":50,
+"Zawisza Bydgoszcz":49,
+"Chojniczanka":48,
+"Górnik Łęczna":48,
+"Stal Stalowa Wola":47,
+"Sandecja Nowy Sącz":46,
+"Lechia Zielona Góra":45,
+"Olimpia Grudziądz":44,
+"Rekord Bielsko-Biała":43,
+"Podhale Nowy Targ":42,
+"Świt Szczecin":41,
+"Sokół Kleczew":40,
+"Śląsk II Wrocław":38,
+"Legia II Warszawa":35
+};
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
 
 let player = {
-    name: "", birthYear: 2008, age: 18, position: "", ovr: 48, form: 60, money: 0,
-    currentYear: CURRENT_SIM_YEAR, decisionCount: 0, club: null, league: null,
-    stats: { matches: 0, mins: 0, goals: 0, assists: 0 }
+
+name:"",
+birthYear:2008,
+age:18,
+position:"Napastnik",
+
+ovr:48,
+form:60,
+
+money:0,
+reputation:5,
+coachRelation:50,
+
+currentYear:2026,
+
+club:null,
+league:null,
+
+decisionCount:0,
+
+contractYears:0,
+
+injury:0,
+yellowCards:0,
+redCards:0,
+
+nationalTeam:false,
+
+stats:{
+    matches:0,
+    starts:0,
+    bench:0,
+    mins:0,
+    goals:0,
+    assists:0
+},
+
+career:{
+    seasons:0,
+    totalMatches:0,
+    totalGoals:0,
+    totalAssists:0
+}
+
 };
 
-function startGame() {
-    player.name = document.getElementById("input-name").value || "Zawodnik";
-    player.birthYear = parseInt(document.getElementById("input-birthyear").value);
-    player.age = player.currentYear - player.birthYear;
-    player.position = document.getElementById("input-position").value;
-    player.ovr = parseInt(document.getElementById("input-start-ovr").value);
 
-    document.getElementById("screen-creation").classList.add("hidden");
-    document.getElementById("screen-game").classList.remove("hidden");
+/* =========================================================
+   WORLD
+========================================================= */
 
-    updateUI();
-    generateClubOffers();
+let world = {
+
+tables:{},
+
+history:[],
+
+news:[],
+
+cupWinner:null,
+
+promotions:[],
+
+relegations:[]
+
+};
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startGame(){
+
+player.name =
+document.getElementById("input-name").value ||
+"Zawodnik";
+
+player.birthYear =
+parseInt(document.getElementById("input-birthyear").value);
+
+player.age =
+CURRENT_SIM_YEAR-player.birthYear;
+
+player.position =
+document.getElementById("input-position").value;
+
+player.ovr =
+parseInt(document.getElementById("input-start-ovr").value);
+
+player.currentYear = CURRENT_SIM_YEAR;
+
+player.money = 0;
+
+createWorld();
+
+document.getElementById("screen-creation")
+.classList.add("hidden");
+
+document.getElementById("screen-game")
+.classList.remove("hidden");
+
+updateUI();
+
+generateInitialOffers();
+
 }
 
-function updateUI() {
-    document.getElementById("stat-name").innerText = `${player.name} (${player.position})`;
-    document.getElementById("stat-birth").innerText = player.birthYear;
-    document.getElementById("stat-age").innerText = player.currentYear - player.birthYear;
-    document.getElementById("stat-club").innerText = player.club ? player.club.name : "Bez klubu";
-    document.getElementById("stat-league").innerText = player.league || "-";
-    document.getElementById("stat-ovr").innerText = player.ovr;
-    document.getElementById("stat-form").innerText = player.form;
-    document.getElementById("stat-money").innerText = player.money.toLocaleString();
-    document.getElementById("stat-year").innerText = player.currentYear;
 
-    document.getElementById("stat-matches").innerText = player.stats.matches;
-    document.getElementById("stat-mins").innerText = player.stats.mins;
-    document.getElementById("stat-goals").innerText = player.stats.goals;
-    document.getElementById("stat-assists").innerText = player.stats.assists;
+/* =========================================================
+   TWORZENIE ŚWIATA
+========================================================= */
+
+function createWorld(){
+
+world.tables={};
+
+Object.keys(LEAGUES).forEach(league=>{
+
+world.tables[league]={};
+
+LEAGUES[league].teams.forEach(team=>{
+
+let ovr=BASE_OVR[team] || 50;
+
+world.tables[league][team]={
+
+team:team,
+
+ovr:ovr,
+
+played:0,
+wins:0,
+draws:0,
+losses:0,
+
+gf:0,
+ga:0,
+
+points:0,
+
+form:50
+
+};
+
+});
+
+});
+
 }
 
-function generateClubOffers(isEndSeason = false) {
-    const actionsBox = document.getElementById("event-actions");
-    actionsBox.innerHTML = "";
-    document.getElementById("event-title").innerText = isEndSeason ? "Koniec Sezonu - Okno Transferowe" : "Wybór Klubu";
-    document.getElementById("event-desc").innerText = "Otrzymałeś następujące oferty kontraktów:";
 
-    let offers = [];
+/* =========================================================
+   UI
+========================================================= */
 
-    // Możliwość pozostania w obecnym klubie jeśli sezon był udany
-    if (isEndSeason && player.club && player.form >= 45) {
-        let newWage = Math.round(player.club.wage * (player.form > 70 ? 1.25 : 1.0));
-        const keepCard = document.createElement("div");
-        keepCard.className = "card offer";
-        keepCard.innerHTML = `
-            <strong>PRZEDŁUŻENIE: ${player.club.name}</strong> <span class="badge">${player.league}</span><br>
-            Klub oferuje Ci nową umowę: <b>${newWage.toLocaleString()} PLN / mies.</b><br>
-            <button onclick="signContract('${player.club.name}', '${player.league}', ${newWage})">Zostań w klubie</button>
-        `;
-        actionsBox.appendChild(keepCard);
-    }
+function updateUI(){
 
-    // Wyznaczenie ofert na podstawie OVR i Formy z ostatniego sezonu
-    let effectiveOvr = player.ovr + (player.form > 65 ? 4 : (player.form < 40 ? -5 : 0));
+document.getElementById("stat-name").innerText =
+player.name+" ("+player.position+")";
 
-    Object.keys(CLUBS_DATABASE).forEach(lName => {
-        CLUBS_DATABASE[lName].forEach(club => {
-            if (effectiveOvr >= club.minOvr - 3 && effectiveOvr <= club.minOvr + 6) {
-                offers.push({ club: club, league: lName });
-            }
-        });
-    });
+document.getElementById("stat-age").innerText =
+player.currentYear-player.birthYear;
 
-    offers.sort(() => 0.5 - Math.random());
-    offers.slice(0, 3).forEach(o => {
-        const card = document.createElement("div");
-        card.className = "card offer";
-        card.innerHTML = `
-            <strong>${o.club.name}</strong> <span class="badge">${o.league}</span><br>
-            Kontrakt: <b>${o.club.wage.toLocaleString()} PLN / mies.</b><br>
-            <button onclick="signContract('${o.club.name}', '${o.league}', ${o.club.wage})">Podpisz Kontrakt</button>
-        `;
-        actionsBox.appendChild(card);
-    });
+document.getElementById("stat-club").innerText =
+player.club ? player.club.name : "Bez klubu";
+
+document.getElementById("stat-league").innerText =
+player.league || "-";
+
+document.getElementById("stat-ovr").innerText =
+player.ovr;
+
+document.getElementById("stat-form").innerText =
+player.form;
+
+document.getElementById("stat-money").innerText =
+player.money.toLocaleString();
+
+document.getElementById("stat-year").innerText =
+player.currentYear;
+
+document.getElementById("stat-reputation").innerText =
+player.reputation;
+
+document.getElementById("stat-coach").innerText =
+player.coachRelation;
+
+document.getElementById("stat-matches").innerText =
+player.stats.matches;
+
+document.getElementById("stat-mins").innerText =
+player.stats.mins;
+
+document.getElementById("stat-goals").innerText =
+player.stats.goals;
+
+document.getElementById("stat-assists").innerText =
+player.stats.assists;
+
+renderTable();
+
+renderCareerStats();
+
+renderWorld();
+
 }
 
-function signContract(clubName, league, wage) {
-    player.club = { name: clubName, wage: wage };
-    player.league = league;
-    player.decisionCount = 0;
-    updateUI();
-    nextSeasonEvent();
+
+/* =========================================================
+   OFERTY
+========================================================= */
+
+function generateInitialOffers(){
+
+let actions =
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+document.getElementById("event-title").innerText =
+"📨 Pierwsze oferty";
+
+document.getElementById("event-desc").innerText =
+"Kilka klubów zainteresowało się Twoją osobą. Wybierz pierwszy krok kariery.";
+
+let offers=[];
+
+Object.keys(LEAGUES).forEach(league=>{
+
+LEAGUES[league].teams.forEach(team=>{
+
+let clubOvr=BASE_OVR[team];
+
+if(player.ovr >= clubOvr-12 &&
+   player.ovr <= clubOvr+5){
+
+offers.push({
+name:team,
+league:league,
+ovr:clubOvr
+});
+
 }
 
-function nextSeasonEvent() {
-    updateUI();
-    const actionsBox = document.getElementById("event-actions");
-    actionsBox.innerHTML = "";
+});
 
-    if (player.decisionCount < 3) {
-        player.decisionCount++;
-        document.getElementById("event-title").innerText = `Sezon ${player.currentYear} - Decyzja ${player.decisionCount}/3`;
-        document.getElementById("event-desc").innerText = "Wybierz działanie wpływiące na Twoją formę oraz umiejętności:";
+});
 
-        const options = [
-            { text: "Ciężki trening indywidualny (+2 OVR, -10 Forma)", act: () => { player.ovr += 2; player.form = Math.max(10, player.form - 10); simulateMidSeasonMatches(); } },
-            { text: "Regeneracja i praca z fizjoterapeutą (+15 Forma)", act: () => { player.form = Math.min(100, player.form + 15); simulateMidSeasonMatches(); } },
-            { text: "Impreza i integracja zespołu (+20 Forma, -1 OVR)", act: () => { player.form = Math.min(100, player.form + 20); player.ovr = Math.max(10, player.ovr - 1); simulateMidSeasonMatches(); } }
-        ];
+offers.sort(()=>Math.random()-.5);
 
-        options.forEach(o => {
-            const btn = document.createElement("button");
-            btn.innerText = o.text;
-            btn.onclick = o.act;
-            actionsBox.appendChild(btn);
-        });
-    } else {
-        simulateFullSeasonEnd();
-    }
+offers.slice(0,4).forEach(o=>{
+
+let wage =
+Math.max(
+800,
+Math.round(o.ovr*o.ovr*3)
+);
+
+let card=document.createElement("div");
+
+card.className="card offer";
+
+card.innerHTML=`
+
+<strong>${o.name}</strong>
+<span class="badge">${o.league}</span>
+
+<br><br>
+
+Siła zespołu:
+<b>${o.ovr} OVR</b>
+
+<br>
+
+Pensja:
+<b>${wage.toLocaleString()} PLN / mies.</b>
+
+<button onclick="signContract(
+'${o.name}',
+'${o.league}',
+${wage}
+)">
+Podpisz kontrakt
+</button>
+`;
+
+actions.appendChild(card);
+
+});
+
 }
 
-function simulateMidSeasonMatches() {
-    // Rozgrywanie kilkunastu meczów w trakcie okresu
-    let played = Math.floor(Math.random() * 4) + 8;
-    for(let i = 0; i < played; i++) {
-        let mins = Math.min(90, Math.floor((player.ovr / 75) * 90) + Math.floor(Math.random() * 15));
-        player.stats.matches++;
-        player.stats.mins += mins;
-        
-        if (mins > 30) {
-            let scoreChance = (player.ovr + player.form) / (player.position === "Napastnik" ? 110 : 180);
-            if (Math.random() < scoreChance) player.stats.goals++;
-            if (Math.random() < (scoreChance * 0.8)) player.stats.assists++;
-        }
-    }
-    player.money += player.club.wage * 4; // Zarobki za okres
-    nextSeasonEvent();
+
+/* =========================================================
+   KONTRAKT
+========================================================= */
+
+function signContract(name,league,wage){
+
+player.club={
+name:name,
+wage:wage
+};
+
+player.league=league;
+
+player.contractYears=2;
+
+player.coachRelation=50;
+
+player.decisionCount=0;
+
+updateUI();
+
+seasonStart();
+
 }
 
-function simulateFullSeasonEnd() {
-    const actionsBox = document.getElementById("event-actions");
-    actionsBox.innerHTML = "";
 
-    // Progres / Regres zawodnika na koniec roku
-    let ovrChange = 0;
-    if (player.form > 70) ovrChange = Math.floor(Math.random() * 3) + 1; // +1 do +3
-    else if (player.form < 40) ovrChange = -Math.floor(Math.random() * 2) - 1; // -1 do -2
-    else ovrChange = Math.random() > 0.5 ? 1 : 0;
+/* =========================================================
+   START SEZONU
+========================================================= */
 
-    player.ovr += ovrChange;
-    player.currentYear++;
-    player.age = player.currentYear - player.birthYear;
+function seasonStart(){
 
-    document.getElementById("event-title").innerText = `Podsumowanie Sezonu ${player.currentYear - 1}`;
-    document.getElementById("event-desc").innerText = 
-        `Sezon dobiegł końca! Rozegrałeś ${player.stats.matches} meczów (${player.stats.mins} min), zdobywając ${player.stats.goals} goli i ${player.stats.assists} asyst. ` +
-        `Zmiana umiejętności (OVR): ${ovrChange >= 0 ? '+' + ovrChange : ovrChange}. Twój aktualny OVR wynosi ${player.ovr}.`;
+document.getElementById("event-title").innerText =
+"📅 Sezon "+player.currentYear;
 
-    const btn = document.createElement("button");
-    btn.innerText = "Przejdź do Okna Transferowego";
-    btn.onclick = () => {
-        // Reset statystyk rocznych
-        player.stats = { matches: 0, mins: 0, goals: 0, assists: 0 };
-        player.form = 50; // Reset formy na nowy sezon
-        generateClubOffers(true);
-    };
-    actionsBox.appendChild(btn);
-    updateUI();
+document.getElementById("event-desc").innerText =
+"Sezon właśnie się rozpoczyna. Trener chce wiedzieć, jak zamierzasz podejść do przygotowań.";
+
+let actions =
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+
+createChoice(
+"💪 Bardzo ciężki trening",
+"+3 OVR, -15 formy",
+()=>{
+player.ovr+=3;
+player.form-=15;
+nextDecision();
+}
+);
+
+createChoice(
+"🧠 Trening taktyczny",
+"+10 relacji z trenerem, +5 formy",
+()=>{
+player.coachRelation+=10;
+player.form+=5;
+nextDecision();
+}
+);
+
+createChoice(
+"😴 Regeneracja",
+"+20 formy",
+()=>{
+player.form+=20;
+nextDecision();
+}
+);
+
 }
 
-function saveGame() {
-    localStorage.setItem("polski_pilkarz_pro_save", JSON.stringify(player));
-    alert("Kariera została pomyślnie zapisana!");
+
+/* =========================================================
+   DECYZJE
+========================================================= */
+
+function nextDecision(){
+
+player.form=
+Math.max(10,Math.min(100,player.form));
+
+player.coachRelation=
+Math.max(0,Math.min(100,player.coachRelation));
+
+document.getElementById("event-title").innerText =
+"🎯 Decyzja w sezonie";
+
+document.getElementById("event-desc").innerText =
+"Masz wpływ na swoją karierę. Co robisz?";
+
+let actions =
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+createChoice(
+"🏋️ Indywidualny trening",
+"+2 OVR, -10 forma",
+()=>{
+player.ovr+=2;
+player.form-=10;
+simulateMatchBlock();
+}
+);
+
+createChoice(
+"🧘 Fizjoterapia",
+"+15 formy",
+()=>{
+player.form+=15;
+simulateMatchBlock();
+}
+);
+
+createChoice(
+"🤝 Integracja z drużyną",
+"+15 trener, +10 forma",
+()=>{
+player.coachRelation+=15;
+player.form+=10;
+simulateMatchBlock();
+}
+);
+
+createChoice(
+"📱 Media społecznościowe",
+"+10 reputacji, -5 trener",
+()=>{
+player.reputation+=10;
+player.coachRelation-=5;
+simulateMatchBlock();
+}
+);
+
+createChoice(
+"🎉 Impreza",
+"+20 forma, -15 trener, -1 OVR",
+()=>{
+player.form+=20;
+player.coachRelation-=15;
+player.ovr-=1;
+simulateMatchBlock();
+}
+);
+
 }
 
-function loadGame() {
-    const saved = localStorage.getItem("polski_pilkarz_pro_save");
-    if (saved) {
-        player = JSON.parse(saved);
-        document.getElementById("screen-creation").classList.add("hidden");
-        document.getElementById("screen-game").classList.remove("hidden");
-        updateUI();
-        nextSeasonEvent();
-    } else {
-        alert("Brak zapisanej gry w pamięci przeglądarki.");
-    }
+
+function createChoice(text,description,fn){
+
+let btn=document.createElement("button");
+
+btn.className="choice";
+
+btn.innerHTML=
+text+"<br><small>"+description+"</small>";
+
+btn.onclick=fn;
+
+document.getElementById("event-actions")
+.appendChild(btn);
+
 }
+
+
+/* =========================================================
+   MECZE
+========================================================= */
+
+function simulateMatchBlock(){
+
+let games =
+Math.floor(Math.random()*4)+6;
+
+for(let i=0;i<games;i++){
+
+simulateMatch();
+
+}
+
+player.money += player.club.wage*2;
+
+player.decisionCount++;
+
+if(player.decisionCount>=3){
+
+finishSeason();
+
+}else{
+
+nextDecision();
+
+}
+
+}
+
+
+/* =========================================================
+   POJEDYNCZY MECZ
+========================================================= */
+
+function simulateMatch(){
+
+if(player.injury>0){
+
+player.injury--;
+
+return;
+
+}
+
+let club =
+world.tables[player.league][player.club.name];
+
+let minutes;
+
+let starterChance =
+(player.ovr+player.form+
+player.coachRelation)/3;
+
+if(starterChance>=60){
+
+minutes =
+Math.floor(Math.random()*31)+60;
+
+player.stats.starts++;
+
+}else{
+
+minutes =
+Math.floor(Math.random()*45);
+
+player.stats.bench++;
+
+}
+
+if(minutes<10){
+
+return;
+
+}
+
+player.stats.matches++;
+
+player.stats.mins+=minutes;
+
+
+/* wynik drużyny */
+
+let opponent =
+getRandomOpponent(player.league,player.club.name);
+
+let strengthA =
+club.ovr+club.form/10;
+
+let strengthB =
+opponent.ovr+opponent.form/10;
+
+let result=Math.random()*(strengthA+strengthB);
+
+let goalsA=
+Math.floor(Math.random()*4);
+
+let goalsB=
+Math.floor(Math.random()*4);
+
+if(strengthA>strengthB){
+
+goalsA=
+Math.max(
+goalsA,
+Math.floor(Math.random()*3)
+);
+
+}else{
+
+goalsB=
+Math.max(
+goalsB,
+Math.floor(Math.random()*3)
+);
+
+}
+
+
+/* aktualizacja tabeli */
+
+club.played++;
+opponent.played++;
+
+club.gf+=goalsA;
+club.ga+=goalsB;
+
+opponent.gf+=goalsB;
+opponent.ga+=goalsA;
+
+if(goalsA>goalsB){
+
+club.wins++;
+club.points+=3;
+
+opponent.losses++;
+
+}else if(goalsA===goalsB){
+
+club.draws++;
+club.points++;
+
+opponent.draws++;
+opponent.points++;
+
+}else{
+
+club.losses++;
+
+opponent.wins++;
+opponent.points+=3;
+
+}
+
+
+/* statystyki zawodnika */
+
+if(minutes>=30){
+
+let attackChance;
+
+if(player.position==="Napastnik")
+attackChance=(player.ovr+player.form)/125;
+else if(player.position==="Pomocnik")
+attackChance=(player.ovr+player.form)/180;
+else
+attackChance=(player.ovr+player.form)/260;
+
+if(Math.random()<attackChance)
+player.stats.goals++;
+
+if(Math.random()<attackChance*0.75)
+player.stats.assists++;
+
+}
+
+
+/* kartki */
+
+if(Math.random()<0.06)
+player.yellowCards++;
+
+if(Math.random()<0.008){
+
+player.redCards++;
+
+player.coachRelation-=5;
+
+}
+
+
+/* kontuzje */
+
+if(Math.random()<0.025){
+
+player.injury =
+Math.floor(Math.random()*5)+1;
+
+}
+
+}
+
+
+/* =========================================================
+   LOSOWY PRZECIWNIK
+========================================================= */
+
+function getRandomOpponent(league,exclude){
+
+let teams=
+Object.values(world.tables[league]);
+
+let possible=
+teams.filter(x=>x.team!==exclude);
+
+return possible[
+Math.floor(Math.random()*possible.length)
+];
+
+}
+
+
+/* =========================================================
+   KONIEC SEZONU
+========================================================= */
+
+function finishSeason(){
+
+let table=
+getSortedTable(player.league);
+
+let position=
+table.findIndex(
+x=>x.team===player.club.name
+)+1;
+
+
+/* progres */
+
+let change=0;
+
+if(player.form>=75)
+change=Math.floor(Math.random()*3)+1;
+
+else if(player.form<35)
+change=-1;
+
+else if(Math.random()<0.6)
+change=1;
+
+player.ovr=
+Math.max(30,player.ovr+change);
+
+
+/* premia */
+
+let bonus=
+Math.max(0,(20-position)*1000);
+
+player.money+=bonus;
+
+
+/* historia */
+
+world.history.push({
+
+year:player.currentYear,
+
+club:player.club.name,
+
+league:player.league,
+
+position:position,
+
+ovr:player.ovr,
+
+goals:player.stats.goals,
+
+assists:player.stats.assists
+
+});
+
+
+/* symulacja reszty ligi */
+
+simulateRemainingLeague(player.league);
+
+resolvePromotionRelegation();
+
+
+document.getElementById("event-title").innerText =
+"🏁 Koniec sezonu "+player.currentYear;
+
+document.getElementById("event-desc").innerHTML=
+
+`Zakończyłeś sezon na <b>${position}. miejscu</b>.<br><br>
+
+Mecze: ${player.stats.matches}<br>
+Minuty: ${player.stats.mins}<br>
+Gole: ${player.stats.goals}<br>
+Asysty: ${player.stats.assists}<br><br>
+
+Zmiana OVR:
+<b>${change>=0?"+":""}${change}</b><br>
+
+Premia:
+<b>${bonus.toLocaleString()} PLN</b>`;
+
+let actions=
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+let b=document.createElement("button");
+
+b.innerText="📊 Zobacz tabelę i zakończ sezon";
+
+b.onclick=()=>{
+
+renderTable();
+
+showSeasonSummary();
+
+};
+
+actions.appendChild(b);
+
+updateUI();
+
+}
+
+
+/* =========================================================
+   SYMULACJA LIG
+========================================================= */
+
+function simulateRemainingLeague(league){
+
+let table=
+world.tables[league];
+
+Object.values(table).forEach(team=>{
+
+while(team.played<34){
+
+let opponent=
+getRandomOpponent(league,team.team);
+
+if(opponent.played>=34)
+break;
+
+let a=team.ovr+
+Math.random()*15;
+
+let b=opponent.ovr+
+Math.random()*15;
+
+let ga=Math.floor(Math.random()*4);
+let gb=Math.floor(Math.random()*4);
+
+if(a>b) ga=Math.max(ga,gb+1);
+if(b>a) gb=Math.max(gb,ga+1);
+
+team.played++;
+opponent.played++;
+
+team.gf+=ga;
+team.ga+=gb;
+
+opponent.gf+=gb;
+opponent.ga+=ga;
+
+if(ga>gb){
+
+team.wins++;
+team.points+=3;
+opponent.losses++;
+
+}else if(ga===gb){
+
+team.draws++;
+team.points++;
+
+opponent.draws++;
+opponent.points++;
+
+}else{
+
+team.losses++;
+opponent.wins++;
+opponent.points+=3;
+
+}
+
+}
+
+});
+
+}
+
+
+/* =========================================================
+   TABELA
+========================================================= */
+
+function getSortedTable(league){
+
+return Object.values(world.tables[league])
+.sort((a,b)=>{
+
+if(b.points!==a.points)
+return b.points-a.points;
+
+let gdB=b.gf-b.ga;
+let gdA=a.gf-a.ga;
+
+return gdB-gdA;
+
+});
+
+}
+
+
+function renderTable(){
+
+if(!player.league)
+return;
+
+let table=
+getSortedTable(player.league);
+
+let html=`
+
+<table>
+
+<tr>
+<th>#</th>
+<th>Klub</th>
+<th>M</th>
+<th>W</th>
+<th>R</th>
+<th>P</th>
+<th>Bilans</th>
+<th>PKT</th>
+</tr>
+`;
+
+table.forEach((team,index)=>{
+
+let cls=
+team.team===player.club?.name
+?"user-team":"";
+
+let status="";
+
+if(index===0 &&
+player.league!=="Ekstraklasa")
+status="⬆️";
+
+if(index===table.length-1)
+status="⬇️";
+
+if(player.league==="Ekstraklasa" &&
+index<3)
+status="🏆";
+
+html+=`
+
+<tr class="${cls}">
+
+<td>${index+1}</td>
+
+<td>
+${status} ${team.team}
+</td>
+
+<td>${team.played}</td>
+
+<td>${team.wins}</td>
+
+<td>${team.draws}</td>
+
+<td>${team.points}</td>
+
+<td>${team.gf}:${team.ga}</td>
+
+<td><b>${team.points}</b></td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("league-table").innerHTML=html;
+
+}
+
+
+/* =========================================================
+   AWANSE / SPADKI
+========================================================= */
+
+function resolvePromotionRelegation(){
+
+world.promotions=[];
+world.relegations=[];
+
+
+/* EKSTRAKLASA */
+
+let extra=
+getSortedTable("Ekstraklasa");
+
+let liga1=
+getSortedTable("1 Liga");
+
+let liga2=
+getSortedTable("2 Liga");
+
+
+/* spadki */
+
+let relegatedExtra=
+extra.slice(-3);
+
+let promotedLiga1=
+liga1.slice(0,2);
+
+
+/* 1 LIGA */
+
+let relegatedLiga1=
+liga1.slice(-3);
+
+let promotedLiga2=
+liga2.slice(0,2);
+
+
+/* 2 LIGA */
+
+let relegatedLiga2=
+liga2.slice(-2);
+
+
+/* baraże */
+
+let playoffExtra=
+extra.slice(-3,-1);
+
+let playoffLiga1=
+liga1.slice(2,6);
+
+let playoff2=
+liga2.slice(2,6);
+
+
+world.history.push({
+
+year:player.currentYear,
+
+promotionRelegation:true,
+
+extraRelegated:
+relegatedExtra.map(x=>x.team),
+
+liga1Promoted:
+promotedLiga1.map(x=>x.team),
+
+liga1Relegated:
+relegatedLiga1.map(x=>x.team),
+
+liga2Promoted:
+promotedLiga2.map(x=>x.team),
+
+playoffsExtra:
+playoffExtra.map(x=>x.team),
+
+playoffsLiga1:
+playoffLiga1.map(x=>x.team),
+
+playoffs2:
+playoff2.map(x=>x.team)
+
+});
+
+
+world.promotions.push(
+...promotedLiga1.map(x=>x.team),
+...promotedLiga2.map(x=>x.team)
+);
+
+world.relegations.push(
+...relegatedExtra.map(x=>x.team),
+...relegatedLiga1.map(x=>x.team),
+...relegatedLiga2.map(x=>x.team)
+);
+
+}
+
+
+/* =========================================================
+   PODSUMOWANIE
+========================================================= */
+
+function showSeasonSummary(){
+
+let table=
+getSortedTable(player.league);
+
+let position=
+table.findIndex(
+x=>x.team===player.club.name
+)+1;
+
+document.getElementById("event-title").innerText=
+"📊 Podsumowanie sezonu";
+
+document.getElementById("event-desc").innerHTML=
+
+`
+<b>${player.club.name}</b><br>
+Pozycja: ${position}. miejsce<br>
+OVR: ${player.ovr}<br>
+Forma: ${player.form}<br><br>
+
+⚽ Gole: ${player.stats.goals}<br>
+🎯 Asysty: ${player.stats.assists}<br>
+🟨 Żółte kartki: ${player.yellowCards}<br>
+🟥 Czerwone kartki: ${player.redCards}<br>
+`;
+
+let actions=
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+createChoice(
+"🔄 Przejdź do nowego sezonu",
+"Kontynuuj karierę w obecnym klubie",
+()=>{
+
+player.currentYear++;
+
+player.age++;
+
+player.contractYears--;
+
+player.stats={
+matches:0,
+starts:0,
+bench:0,
+mins:0,
+goals:0,
+assists:0
+};
+
+player.form=50;
+
+player.yellowCards=0;
+player.redCards=0;
+
+player.injury=0;
+
+player.decisionCount=0;
+
+seasonStart();
+
+updateUI();
+
+}
+);
+
+createChoice(
+"💰 Rozpocznij negocjacje transferowe",
+"Sprawdź nowe kluby",
+()=>generateTransferOffers()
+);
+
+}
+
+
+/* =========================================================
+   TRANSFERY
+========================================================= */
+
+function generateTransferOffers(){
+
+let actions=
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+document.getElementById("event-title").innerText=
+"🔄 Okno transferowe";
+
+document.getElementById("event-desc").innerText=
+"Twój agent znalazł zainteresowane kluby.";
+
+let offers=[];
+
+Object.keys(LEAGUES).forEach(league=>{
+
+LEAGUES[league].teams.forEach(team=>{
+
+let teamOvr=
+BASE_OVR[team];
+
+let reputationBonus=
+player.reputation/20;
+
+if(
+player.ovr+reputationBonus>=
+teamOvr-5 &&
+Math.random()<0.35
+){
+
+offers.push({
+team:team,
+league:league,
+ovr:teamOvr
+});
+
+}
+
+});
+
+});
+
+offers.sort(()=>Math.random()-.5);
+
+if(offers.length===0){
+
+actions.innerHTML=
+"<p>❌ Żaden klub nie złożył obecnie konkretnej oferty.</p>";
+
+let b=document.createElement("button");
+
+b.innerText="Wróć";
+
+b.onclick=()=>showSeasonSummary();
+
+actions.appendChild(b);
+
+return;
+
+}
+
+offers.slice(0,5).forEach(o=>{
+
+let wage=
+Math.round(o.ovr*o.ovr*3.5);
+
+let card=
+document.createElement("div");
+
+card.className="card offer";
+
+card.innerHTML=`
+
+<strong>${o.team}</strong>
+
+<span class="badge">${o.league}</span>
+
+<br>
+
+Siła:
+<b>${o.ovr}</b>
+
+<br>
+
+Pensja:
+<b>${wage.toLocaleString()} PLN</b>
+
+<button onclick="transferTo(
+'${o.team}',
+'${o.league}',
+${wage}
+)">
+✍️ Podpisz
+</button>
+
+`;
+
+actions.appendChild(card);
+
+});
+
+}
+
+
+function transferTo(team,league,wage){
+
+player.club={
+name:team,
+wage:wage
+};
+
+player.league=league;
+
+player.contractYears=3;
+
+player.reputation+=5;
+
+player.coachRelation=50;
+
+updateUI();
+
+document.getElementById("event-title").innerText=
+"✍️ Transfer zakończony";
+
+document.getElementById("event-desc").innerText=
+`Podpisałeś kontrakt z ${team}.`;
+
+let actions=
+document.getElementById("event-actions");
+
+actions.innerHTML="";
+
+let b=document.createElement("button");
+
+b.innerText="Rozpocznij sezon";
+
+b.onclick=()=>seasonStart();
+
+actions.appendChild(b);
+
+}
+
+
+/* =========================================================
+   STATYSTYKI
+========================================================= */
+
+function renderCareerStats(){
+
+let totalMatches=
+world.history.reduce(
+(a,x)=>a+(x.goals!==undefined?1:0),0
+);
+
+let html=`
+
+<div class="card">
+
+<div class="big-number">
+${player.stats.goals}
+</div>
+
+Gole w obecnym sezonie
+
+</div>
+
+<div class="card">
+
+<strong>Historia kariery</strong><br><br>
+
+Sezony:
+${world.history.filter(x=>x.club).length}<br>
+
+Łączne mecze:
+${player.career.totalMatches+
+player.stats.matches}<br>
+
+Łączne gole:
+${player.career.totalGoals+
+player.stats.goals}<br>
+
+Łączne asysty:
+${player.career.totalAssists+
+player.stats.assists}
+
+</div>
+
+`;
+
+document.getElementById("career-stats").innerHTML=html;
+
+}
+
+
+/* =========================================================
+   ŚWIAT
+========================================================= */
+
+function renderWorld(){
+
+let html="";
+
+if(world.promotions.length){
+
+html+=`
+
+<div class="news">
+
+<strong>⬆️ Awanse</strong><br>
+
+${world.promotions.join("<br>")}
+
+</div>
+
+`;
+
+}
+
+if(world.relegations.length){
+
+html+=`
+
+<div class="news">
+
+<strong>⬇️ Spadki</strong><br>
+
+${world.relegations.join("<br>")}
+
+</div>
+
+`;
+
+}
+
+html+=`
+
+<div class="news">
+
+🏆 Puchar Polski:<br>
+
+Brak rozstrzygnięcia
+
+</div>
+
+`;
+
+if(player.injury>0){
+
+html+=`
+
+<div class="news red">
+
+🩹 Kontuzja:
+jeszcze ${player.injury} tygodni
+
+</div>
+
+`;
+
+}
+
+document.getElementById("world-info").innerHTML=html;
+
+}
+
+
+/* =========================================================
+   PANELE
+========================================================= */
+
+function showPanel(panel){
+
+document.getElementById("panel-main")
+.classList.add("hidden");
+
+document.getElementById("panel-table")
+.classList.add("hidden");
+
+document.getElementById("panel-stats")
+.classList.add("hidden");
+
+document.getElementById("panel-world")
+.classList.add("hidden");
+
+document.getElementById("panel-"+panel)
+.classList.remove("hidden");
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveGame(){
+
+let save={
+
+player:player,
+
+world:world
+
+};
+
+localStorage.setItem(
+"polski_pilkarz_pro_v2",
+JSON.stringify(save)
+);
+
+alert("✅ Kariera została zapisana!");
+
+}
+
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+function loadGame(){
+
+let saved=
+localStorage.getItem(
+"polski_pilkarz_pro_v2"
+);
+
+if(!saved){
+
+alert("Brak zapisu.");
+
+return;
+
+}
+
+let data=
+JSON.parse(saved);
+
+player=data.player;
+world=data.world;
+
+document.getElementById("screen-creation")
+.classList.add("hidden");
+
+document.getElementById("screen-game")
+.classList.remove("hidden");
+
+updateUI();
+
+seasonStart();
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame(){
+
+if(
+confirm(
+"Czy na pewno chcesz usunąć całą karierę?"
+)
+){
+
+localStorage.removeItem(
+"polski_pilkarz_pro_v2"
+);
+
+location.reload();
+
+}
+
+}
+
 </script>
 
 </body>
